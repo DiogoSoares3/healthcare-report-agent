@@ -11,6 +11,6 @@ wheels/
 .env
 .vscode/
 
-.csv
-.parquet
-.db
+*.csv
+*.parquet
+*.db
