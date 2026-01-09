@@ -1,0 +1,15 @@
+services:
+  api:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./api/:/app/api
+      - ./tests/:/app/tests
+      - ./data:/app/data
+    ports:
+      - target: 8220
+        published: 8220
+    restart: unless-stopped
