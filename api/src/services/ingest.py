@@ -12,9 +12,15 @@ logger = logging.getLogger(__name__)
 
 settings = get_settings()
 
+
 def download_data():
-    if settings.RAW_DATA_PATH.exists() and os.getenv("FORCE_UPDATE", "false").lower() != "true":
-        logger.info(f"Raw file already exists at {settings.RAW_DATA_PATH}. Skipping download.")
+    if (
+        settings.RAW_DATA_PATH.exists()
+        and os.getenv("FORCE_UPDATE", "false").lower() != "true"
+    ):
+        logger.info(
+            f"Raw file already exists at {settings.RAW_DATA_PATH}. Skipping download."
+        )
         return
 
     logger.info(f"Starting download from {settings.DATA_URL}...")
@@ -33,14 +39,22 @@ def download_data():
         logger.error(f"Download failed: {e}")
         raise
 
+
 def process_and_load():
     logger.info("Starting data processing...")
 
     selected_cols = [
-        "DT_NOTIFIC", "EVOLUCAO", "UTI",
-        "VACINA", "VACINA_COV",
-        "CLASSI_FIN", "NU_IDADE_N", "CS_SEXO",
-        "CARDIOPATI", "DIABETES", "OBESIDADE"
+        "DT_NOTIFIC",
+        "EVOLUCAO",
+        "UTI",
+        "VACINA",
+        "VACINA_COV",
+        "CLASSI_FIN",
+        "NU_IDADE_N",
+        "CS_SEXO",
+        "CARDIOPATI",
+        "DIABETES",
+        "OBESIDADE",
     ]
 
     try:
@@ -49,10 +63,10 @@ def process_and_load():
             sep=";",
             encoding="utf-8",
             usecols=selected_cols,
-            low_memory=False
+            low_memory=False,
         )
         logger.info(f"Raw data loaded. Total records: {len(df)}")
-        
+
         df["DT_NOTIFIC"] = pd.to_datetime(df["DT_NOTIFIC"], errors="coerce")
         df = df.dropna(subset=["DT_NOTIFIC"])
 
@@ -79,9 +93,8 @@ def process_and_load():
         df["sex"] = df["CS_SEXO"].fillna("Ignored")
 
         for col in ["CARDIOPATI", "DIABETES", "OBESIDADE"]:
-            df[col.lower()] = (
-                pd.to_numeric(df[col], errors="coerce")
-                .apply(lambda x: 1 if x == 1 else 0)
+            df[col.lower()] = pd.to_numeric(df[col], errors="coerce").apply(
+                lambda x: 1 if x == 1 else 0
             )
 
         logger.info(f"Saving processed data to {settings.DB_PATH}...")
@@ -90,9 +103,7 @@ def process_and_load():
         con = duckdb.connect(str(settings.DB_PATH))
         con.execute("CREATE OR REPLACE TABLE srag_analytics AS SELECT * FROM df")
 
-        count = con.execute(
-            "SELECT COUNT(*) FROM srag_analytics"
-        ).fetchone()[0]
+        count = con.execute("SELECT COUNT(*) FROM srag_analytics").fetchone()[0]
 
         logger.info(f"ETL completed. Total records in DuckDB: {count}")
 
@@ -101,6 +112,7 @@ def process_and_load():
     except Exception as e:
         logger.error(f"Processing error: {e}")
         raise
+
 
 def run_pipeline():
     if settings.DB_PATH.exists() and not settings.FORCE_UPDATE:
@@ -111,6 +123,7 @@ def run_pipeline():
 
     download_data()
     process_and_load()
+
 
 if __name__ == "__main__":
     run_pipeline()
