@@ -1,9 +1,11 @@
 import logging
 import time
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from api.src.schemas import ChatRequest, ReportRequest, AgentResponse
 from api.src.agents.orchestrator import get_orchestrator, SRAGAgentOrchestrator
+from api.src.services.manage_plots import extract_plots_from_result
 
 router = APIRouter(prefix="/api/v1/agent", tags=["Agent"])
 logger = logging.getLogger(__name__)
@@ -45,19 +47,23 @@ async def generate_report(
     start_time = time.time()
 
     report_prompt = (
-        "Generate a comprehensive Executive Report on the current SRAG situation for healthcare professionals.\n"
-        "You MUST strictly follow this structure:\n\n"
+        "Generate a comprehensive **Executive Report** on the current **SRAG situation**.\n"
+        "STRICTLY FOLLOW this structure and formatting rules:\n\n"
         "1. **KEY METRICS**: Calculate and present:\n"
-        "   - Case Increase Rate (Growth)\n"
-        "   - Mortality Rate (CFR)\n"
-        "   - ICU Occupation Rate\n"
-        "   - Vaccination Rate\n\n"
-        "2. **VISUAL ANALYSIS**: Generate and analyze two charts:\n"
-        "   - Daily cases for the last 30 days ('trend_30d').\n"
-        "   - Monthly cases for the last 12 months ('history_12m').\n\n"
-        "3. **CONTEXTUAL ANALYSIS**: Use the search tool to find recent news (outbreaks, variants, vaccines) "
-        "that explain the numbers found above.\n\n"
-        "4. **CONCLUSION**: A brief summary of the severity."
+        "   - Case Increase Rate (Growth %)\n"
+        "   - Mortality Rate (CFR %)\n"
+        "   - ICU Occupation Rate (Total)\n"
+        "   - Vaccination Rate (%)\n\n"
+        "2. **VISUAL ANALYSIS** (Mandatory):\n"
+        "   - You MUST generate two charts: 'trend_30d' and 'history_12m'.\n"
+        "   - **IMPORTANT:** When embedding charts, use the EXACT filename returned by the tool (including .png):\n"
+        "     `![Desc](/api/v1/plots/<exact_filename_from_tool_output>)`\n"
+        "   - Do NOT use the local 'data/plots/' path in the Markdown link.\n\n"
+        "3. **CONTEXTUAL ANALYSIS**:\n"
+        "   Use 'tavily_search' to find relevant news (e.g., outbreaks, variants, public health events)\n"
+        "   to provide context and support for the presented metrics, helping explain observed trends\n"
+        "   and anomalies in the data.\n\n"
+        "4. **CONCLUSION**: Brief executive summary."
     )
 
     if request.focus_area:
@@ -67,10 +73,15 @@ async def generate_report(
 
     try:
         logger.info("Triggering Report Generation...")
-        response_text = await orchestrator.run(report_prompt)
+        result = await orchestrator.run(report_prompt)
+
+        response_text = result.output
+        generated_plots = extract_plots_from_result(result)
 
         return AgentResponse(
-            response=response_text, execution_time=time.time() - start_time
+            response=response_text,
+            plots=generated_plots,
+            execution_time=time.time() - start_time,
         )
     except Exception as e:
         logger.error(f"Report generation failed: {e}", exc_info=True)

@@ -23,8 +23,12 @@ class Settings(BaseSettings):
     TAVILY_API_KEY: SecretStr
     OPENAI_MODEL: str = "gpt-4.1-mini"
 
+    TEMPERATURE: float = 0.0
+    MAX_INPUT_TOKENS: int = 1000
+    MAX_OUTPUT_TOKENS: int = 2000
+
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+        env_file=".env", env_file_encoding="utf-8", extra="ignore", frozen=True
     )
 
 

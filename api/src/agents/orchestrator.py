@@ -2,14 +2,14 @@ import logging
 from functools import lru_cache
 
 from fastapi import Depends
-from pydantic_ai import Agent
+from pydantic_ai import Agent, AgentRunResult
 from pydantic_ai.settings import ModelSettings
 from pydantic_ai_guardrails import GuardedAgent
 from pydantic_ai_guardrails.guardrails.input import (
     length_limit,
     pii_detector,
     prompt_injection,
-    toxicity,
+    toxicity_detector,
 )
 from pydantic_ai_guardrails.guardrails.output import (
     validate_tool_parameters,
@@ -66,7 +66,7 @@ class SRAGAgentOrchestrator:
                 length_limit(max_tokens=self.settings.MAX_INPUT_TOKENS),
                 pii_detector(),
                 prompt_injection(),
-                toxicity(),
+                toxicity_detector(),
             ],
             output_guardrails=[
                 # secret_redaction(),
@@ -83,7 +83,7 @@ class SRAGAgentOrchestrator:
         )
         logger.info("SRAG Agent initialized with Guardrails.")
 
-    async def run(self, query: str) -> str:
+    async def run(self, query: str) -> AgentRunResult:
         logger.info(f"Agent received query: {query}")
 
         deps = AgentDeps(
@@ -95,11 +95,11 @@ class SRAGAgentOrchestrator:
 
             logger.info(f"Run completed. Usage: {result.usage()}")
 
-            return result.data
+            return result
 
         except Exception as e:
             logger.error(f"Agent execution failed: {e}", exc_info=True)
-            return f"I encountered an error while processing your request: {str(e)}"
+            raise e
 
 
 @lru_cache

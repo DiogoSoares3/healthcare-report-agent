@@ -1,6 +1,8 @@
 import duckdb
 from duckdb import DuckDBPyConnection
-from api.src.config import settings
+from api.src.config import get_settings
+
+settings = get_settings()
 
 
 def get_db_connection(read_only: bool = True) -> DuckDBPyConnection:
