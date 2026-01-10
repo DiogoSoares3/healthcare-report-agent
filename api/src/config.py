@@ -1,5 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
+from pydantic import SecretStr
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -16,9 +17,10 @@ class Settings(BaseSettings):
 
     RAW_DATA_PATH: Path = PROJECT_DIR / "data" / "raw" / "data.csv"
     DB_PATH: Path = PROJECT_DIR / "data" / "processed" / "srag_analytics.db"
+    PLOTS_DIR: Path = PROJECT_DIR / "data" / "plots"
 
-    OPENAI_API_KEY: str
-    # TAVILY_API_KEY: str
+    OPENAI_API_KEY: SecretStr
+    TAVILY_API_KEY: SecretStr
     OPENAI_MODEL: str = "gpt-4.1-mini"
 
     model_config = SettingsConfigDict(
