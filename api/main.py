@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from api.src.services.ingest import run_pipeline
 from api.src.routers import agent
 from api.src.config import get_settings
+from api.src.services.telemetry import setup_telemetry
 
 logger = logging.getLogger("api")
 settings = get_settings()
@@ -15,6 +16,7 @@ settings = get_settings()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings.PLOTS_DIR.mkdir(parents=True, exist_ok=True)
+    setup_telemetry()
 
     logger.info("Checking data integrity (ETL)...")
     try:

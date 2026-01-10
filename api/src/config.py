@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     MAX_INPUT_TOKENS: int = 1000
     MAX_OUTPUT_TOKENS: int = 2000
 
+    MLFLOW_TRACKING_URI: str = "http://mlflow:5000"
+    MLFLOW_EXPERIMENT_NAME: str = "SRAG"
+    MLFLOW_ENABLE: bool = True
+
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", extra="ignore", frozen=True
     )

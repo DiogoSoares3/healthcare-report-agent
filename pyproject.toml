@@ -10,6 +10,7 @@ dependencies = [
     "fastparquet>=2025.12.0",
     "ipykernel>=7.1.0",
     "matplotlib>=3.10.8",
+    "mlflow>=3.8.1",
     "pandas>=2.3.3",
     "pip>=25.3",
     "pre-commit>=4.5.1",
