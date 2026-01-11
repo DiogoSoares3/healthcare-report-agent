@@ -3,7 +3,7 @@ import time
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from api.src.schemas import ChatRequest, ReportRequest, AgentResponse
+from api.src.schemas import ReportRequest, AgentResponse
 from api.src.agents.orchestrator import get_orchestrator, SRAGAgentOrchestrator
 from api.src.services.manage_plots import extract_plots_from_result
 from api.src.db.minio_connection import upload_run_artifacts
@@ -14,26 +14,6 @@ router = APIRouter(prefix="/api/v1/agent", tags=["Agent"])
 logger = logging.getLogger(__name__)
 
 settings = get_settings()
-
-
-@router.post("/chat", response_model=AgentResponse)
-async def chat_with_agent(
-    request: ChatRequest,
-    orchestrator: SRAGAgentOrchestrator = Depends(get_orchestrator),
-):
-    """
-    Free-form chat endpoint for follow-up questions.
-    """
-    start_time = time.time()
-    try:
-        response_text = await orchestrator.run(request.query)
-
-        return AgentResponse(
-            response=response_text, execution_time=time.time() - start_time
-        )
-    except Exception as e:
-        logger.error(f"Chat execution failed: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/report", response_model=AgentResponse)

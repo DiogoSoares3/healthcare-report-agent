@@ -12,14 +12,6 @@ class ReportRequest(BaseModel):
     )
 
 
-class ChatRequest(BaseModel):
-    """
-    Request payload for ad-hoc follow-up questions.
-    """
-
-    query: str = Field(..., description="User question for the agent.")
-
-
 class AgentResponse(BaseModel):
     """
     Standardized response format.

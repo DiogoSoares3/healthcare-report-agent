@@ -30,11 +30,11 @@ st.title("🏥 SRAG Executive Reporting Agent")
 
 with st.sidebar:
     st.header("Parameters")
-    focus_area = st.text_input("Focus Area", placeholder="Ex: Children under 5...")
+    focus_area = st.text_input("Focus Area", placeholder="Ex: H1N1 Variant")
     st.info("Generating report via LLM Agent pipeline...")
 
 if st.button("Generate Report", type="primary"):
-    with st.spinner("Agent is working... (Querying DuckDB + Tavily Search)"):
+    with st.spinner("Agent is working..."):
         try:
             payload = {"focus_area": focus_area if focus_area else None}
             response = requests.post(API_INTERNAL_URL, json=payload, timeout=120)
