@@ -17,5 +17,5 @@ class PlotParams(BaseModel):
 
 class SearchParams(BaseModel):
     query: str = Field(
-        description="The search query for external news.", min_length=5, max_length=100
+        description="The search query for external news.", min_length=5, max_length=250
     )
