@@ -31,3 +31,15 @@ def extract_plots_from_result(result: AgentRunResult) -> list[str]:
                         plot_files.append(filename)
 
     return list(set(plot_files))
+
+
+def create_offline_markdown(original_text: str, plot_filenames: list[str]) -> str:
+    offline_text = original_text
+
+    offline_text = re.sub(
+        r"\((?:https?://[^)]+)?/api/v1/plots/([^)]+\.png)\)",
+        r"(plots/\1)",
+        offline_text,
+    )
+
+    return offline_text

@@ -16,7 +16,7 @@ from pydantic_ai_guardrails.guardrails.output import (
 )
 
 from api.src.config import get_settings, Settings
-from api.src.db.connection import get_schema_info
+from api.src.db.duckdb_connection import get_schema_info
 from api.src.agents.deps import AgentDeps
 from api.src.agents.prompts import build_system_prompt
 
