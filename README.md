@@ -1,0 +1,243 @@
+# SRAG Insight Agent: Automated Healthcare Reporting Engine
+
+> **Proof of Concept for Indicium HealthCare Inc.**
+
+## Executive Summary
+
+This repository contains a Generative AI solution designed to generate real-time, data-driven reports on Severe Acute Respiratory Syndrome (SRAG).
+
+Developed as a Proof of Concept (PoC) to evaluate the feasibility of automated epidemiological monitoring, this solution establish a **Agentic Architecture**. The system orchestrates a Large Language Model (LLM) to autonomously query high-volume healthcare datasets (Open DATASUS), visualize trends, and contextualize findings with real-time news retrieval.
+
+The core philosophy of this implementation is **"Pragmatic Engineering"**: balancing the cutting-edge capabilities of Agentic AI with the reliability, type safety, and observability required for enterprise software.
+
+---
+
+## Architectural Strategy & Decision Making
+
+To ensure the solution is scalable, auditable, and maintainable, the following architectural decisions were prioritized to meet the evaluation criteria:
+
+### 1. The Reasoning Engine: ReAct + Chain-of-Thought
+
+**Criteria:** *Architecture selection*
+
+Instead of a complex Multi-Agent System (which often introduces unnecessary latency and orchestration overhead for this scope) or a rigid linear chain (which lacks flexibility), we implemented a **ReAct (Reason + Act) Agent**.
+
+* **Why:** The problem requires the AI to iteratively "think" about the data it finds, decide if it needs more granularity, and then act.
+* **Implementation:** We inject Chain-of-Thought reasoning directly into the system prompt. This allows the agent to reason about tool outputs, SQL query results, chart generation, and news articles, before synthesizing the final report.
+
+### 2. Governance & Transparency (Observability)
+**Criteria:** *Governance and Transparency*
+
+We implemented a full observability layer using **MLflow** backed by **PostgreSQL** and **MinIO**.
+
+* **Traceability:** Every step of the agent's thought process, every tool call (SQL executed, search terms used), and the final output is logged.
+* **Artifact Management:** Generated charts and markdown reports are versioned in MinIO (S3 compatible), while metadata is stored in Postgres (OLTP), ensuring full auditability of the "decisions" made by the agent.
+
+### 3. Safety & Guardrails
+**Criteria:** *Guardrails* and *Sensitive Data Handling*
+
+We adhere to a "Security First" approach, implementing a **Defense-in-Depth** strategy that handles data privacy at both the storage and interaction levels:
+
+* **Data Minimization (Preprocessing):** Before any data enters the analytical environment, we perform a strict selection of pertinent columns from the raw CSV. Sensitive Personal Identifiable Information (PII) such as Names and CPFs were explicitly discarded during the ETL process to DuckDB, as they are not necessary for the required aggregated metrics (mortality, occupation, vaccination rates).
+* **Input Guardrails:** We utilize `PydanticAI-Guardrails` as an active interception layer. It scans user prompts for potential PII or malicious intent before the LLM processes them.
+* **System Prompt Instruction:** As a secondary safety net, the System Prompt is rigorously instructed to reject any request that attempts to solicit sensitive information, ensuring compliance even if a guardrail is bypassed.
+* **Output/Execution Guardrails:** A custom validator intercepts tool execution, specifically for the SQL tool (`stats_tool`). It ensures the agent cannot execute destructive commands (`DROP`, `DELETE`) or access restricted schemas within the Data Warehouse.
+
+### 4. Tooling Strategy & Capabilities
+**Criteria:** *Use of Tools*
+
+The agent interacts with the environment through three strictly typed tools, designed to adhere to the **Separation of Concerns** principle. Each tool empowers the agent with a specific capability needed to fulfill the reporting requirements:
+
+* **Analytical Engine (`stats_tool`):** To handle the ~323k rows efficiently, we backed this tool with **DuckDB** (OLAP). This allows the agent to execute high-performance aggregation queries (SQL) to extract metrics (mortality, occupation, vaccination) in milliseconds, rather than struggling with slow Python-based data frame manipulation.
+* **Visualization Engine (`plot_tool`):** A dedicated interface for generating trend charts (line/bar plots).
+* **Context Retrieval (`tavily_search`):** To provide the real-time context required by the challenge, this tool connects to the Tavily API, allowing the agent to fetch external news about SRAG to ground its analysis in the current scenario.
+
+---
+
+## Tech Stack & Tools
+
+The stack was chosen to reflect modern Python engineering standards, prioritizing strong typing and reproducibility.
+
+| Component | Technology | Reasoning |
+| :--- | :--- | :--- |
+| **Orchestrator** | **PydanticAI** | Provides a production-grade framework with Dependency Injection, strong type validation, and structured outputs. |
+| **API** | **FastAPI** | High-performance, async-native REST API. Integrates natively with Pydantic for request/response validation. |
+| **Data Warehouse** | **DuckDB** | In-process OLAP database optimized for analytical queries on the CSV dataset. |
+| **Observability** | **MLflow** | Tracks agent runs, prompts, and tool usage metrics. |
+| **Storage** | **MinIO + Postgres** | MinIO handles unstructured artifacts (plots/reports); Postgres act as a OLTP to handle structured telemetry/logs. |
+| **Containerization** | **Docker** | Ensures full environment reproducibility and simplifies the orchestration of the multi-service architecture (API, MLflow, MinIO). |
+| **Web Search** | **Tavily** | Optimized search API for LLMs to retrieve real-time news context. |
+| **Frontend** | **Streamlit** | Rapid prototyping UI to demonstrate the agent's capabilities. |
+| **Package Manager** | **UV** | Chosen over Poetry/Pip for its superior resolution speed and unified project management. |
+| **Code Quality** | **Ruff + Pre-commit** | Strict linting and formatting via pre-commit hooks to ensure PEP-8 compliance and Clean Code before every push. |
+---
+
+## Repository Structure
+
+The project follows a Monorepo-style structure:
+
+```text
+.
+├── api                     # Core Backend Application
+│   ├── main.py             # FastAPI entrypoint
+│   └── src
+│       ├── agents          # PydanticAI Agent definitions, Prompts, and Orchestration
+│       ├── db              # Database connections (DuckDB OLAP & MinIO)
+│       ├── middleware      # Observability and Logging middleware
+│       ├── routers         # API Endpoints
+│       ├── services        # Business logic (Ingestion, Telemetry)
+│       └── tools           # Agent Tools (Stats/SQL, Plotting, Web Search)
+├── data                    # Data Layer
+│   ├── plots               # Generated Plots
+│   ├── processed           # SRAG DuckDB database
+│   └── raw                 # Raw CSV inputs
+├── frontend                # Streamlit User Interface
+├── notebooks               # EDA and Prototyping (Auditable research)
+├── Dockerfile              # Containerization for reproducible deployment
+├── docker-compose.yml      # Service orchestration (API, MLflow, Postgres, MinIO)
+├── pyproject.toml          # Project configuration (Dependencies, Ruff settings)
+└── uv.lock                 # Lockfile for deterministic builds
+```
+
+---
+
+## System Workflow & Engineering
+
+The transition from a raw dataset to a production-grade Agent was driven by a methodical **Research-to-Production** lifecycle.
+
+Before implementing the API, we conducted some experiments:
+1.  **`notebooks/1.0-eda.ipynb`**: Exploratory Data Analysis to understand the schema, identify missing values, and define the business logic for metrics (Mortality, ICU, Vaccination).
+2.  **`notebooks/2.0-agent-prototyping.ipynb`**: A "lab environment" where we tested prompt engineering strategies, guardrails and tool definitions against the DuckDB instance to validate response quality before deployment.
+
+---
+
+### 1. Data Pipeline (ETL & Ingestion)
+**File:** `api/src/services/ingest.py`
+
+The system relies on a local Data Lakehouse architecture. On startup, the application ensures data integrity through a strictly typed ETL pipeline:
+
+1.  **Ingest:** Downloads the official SRAG CSV (~323k rows) from the Open DATASUS S3 bucket.
+2.  **Transform (Label Encoding):**
+    * Raw numeric codes (e.g., `EVOLUCAO=1`) are mapped to semantic labels (`outcome_lbl='Cure'`).
+    * *Why?* LLMs struggle to memorize arbitrary numeric codes. By converting data to semantic strings during ETL, we significantly reduce hallucination rates in SQL generation.
+3.  **Load (DuckDB):** The processed dataframe is persisted into a local DuckDB file (`srag_analytics.db`). This file serves as the read-optimized source for the Agent.
+
+---
+
+### 2. The Orchestrator (Agentic Core)
+**File:** `api/src/agents/orchestrator.py`
+
+The `SRAGAgentOrchestrator` serves as the center of the application, responsible for binding the LLM (Reasoning), Tools (Capabilities), and Data (Context) into a coherent lifecycle.
+
+#### A. Prompt Engineering (Cognitive Architecture)
+**File:** `api/src/agents/prompts.py`
+
+We build a **system prompt** at runtime that serves as a structured guidance layer for the model. This prompt injects domain knowledge before the agent begins its reasoning process:
+
+* **Dynamic Schema Injection:** The prompt receives a live string representation of the DuckDB schema (columns, types, and *sample values*). This drastically reduces SQL generation errors by ensuring the LLM knows exactly what the data looks like.
+* **Business Logic Encoding:** We explicitly define the SQL formulas for KPIs (e.g., *"Mortality Rate = Deaths / (Deaths + Cures)"*) directly in the prompt. This prevents the LLM from hallucinating incorrect mathematical definitions for health metrics.
+* **Strategic Execution Plan:** The prompt enforces a Chain-of-Thought methodology:
+    1.  *Explore* (Query DB)
+    2.  *Identify* (Find Anomalies)
+    3.  *Search* (Find external news context)
+    4.  *Synthesize* (Report).
+* **Technical Constraints:** It includes strict SQL generation rules, such as enforcing `NULLIF` for division-by-zero protection, etc.
+
+#### B. Dependency Injection & Inversion of Control
+**Files:** `api/src/agents/deps.py` & `api/src/routers/agent.py`
+
+The architecture relies on **Dependency Injection (DI)** to ensure testability and decoupling. We implement DI at two distinct levels:
+
+1.  **Application Level (FastAPI):**
+    The `SRAGAgentOrchestrator` itself is injected into the API routes using FastAPI's `Depends` system. This allows the API to remain agnostic of how the agent is constructed, permitting easy swapping of configuration settings or LLM backends without touching the router logic.
+
+2.  **Runtime Level (PydanticAI):**
+    We utilize typed `AgentDeps` to inject runtime resources into the Agent's tools.
+    * **The Mechanism:** Instead of tools importing global database connections (which makes testing impossible), the `stats_tool` and `plot_tool` receive the `db_path` via the context object (`ctx.deps`) at runtime.
+    * **Benefit:** This ensures the tools are stateless and thread-safe. A tool execution depends entirely on the context passed to it by the Orchestrator, ensuring that multiple users can trigger parallel analyses without race conditions on database resources.
+
+---
+
+### 3. Tooling & Capabilities
+
+The Agent interacts with the world through three specialized tools, each adhering to the **Single Responsibility Principle**:
+
+#### A. Analytical Engine (`stats_tool`)
+* **Function:** Executes SQL queries generated by the LLM.
+* **Safety Mechanism:** It includes a custom **SQL Validator** (`validate_sql_safety`) that parses the query string and strictly blocks destructive commands (`DROP`, `DELETE`, `UPDATE`) before they reach the database engine.
+
+#### B. Visualization Engine (`plot_tool`)
+* **Function:** Generates `matplotlib`/`seaborn` charts (Line or Bar plots) based on the data context.
+* **The "Blind Agent" Problem:** Since the LLM cannot "see" the image it generates, this tool implements a **Dual-Return Strategy**:
+    1.  **Artifact Persistence:** It saves the high-resolution PNG to the shared volume (`data/plots/`).
+    2.  **Cognitive & Structural Feedback:** It returns a text payload containing a **Statistical Summary** (so the agent can reason about the data) and the **Exact Filename**.
+    * *Path Resolution:* This explicit return allows the Agent to autonomously embed the image into the final Markdown report using the correct static asset path (`/api/v1/plots/<filename>`). This guarantees that the frontend renders the image correctly.
+
+#### C. Context Retrieval (`search_tool`)
+* **Function:** Wraps the **Tavily API** to fetch real-time news.
+* **Strategy:** The system prompt instructs the agent to use this tool to ground and support business metrics.
+
+---
+
+### 4. Guardrails (Safety Layer)
+**Library:** `pydantic-ai-guardrails`
+
+We implement a **Defense-in-Depth** strategy wrapping the Agent:
+
+| Type | Guardrail | Purpose |
+| :--- | :--- | :--- |
+| **Input** | `pii_detector` | Scans user prompt for Personally Identifiable Information. If detected, the request is blocked before reaching the LLM. |
+| **Input** | `prompt_injection` | Detects attempts to jailbreak the system instructions. |
+| **Input** | `toxicity_detector` | Ensures incoming queries maintain a professional tone suitable for a healthcare environment |
+| **Output** | `validate_tool_parameters` | Validates that arguments passed to tools match the Pydantic schemas (`StatsParams`, `PlotParams`, `SearchParams`) and passes custom validators (like the SQL safety check). |
+
+---
+
+### 5. Observability & Governance (MLflow)
+**Files:** `middleware/observability.py` & `services/telemetry.py`
+
+To satisfy the "Governance" requirement, every interaction is audited.
+
+* **Middleware:** The `MLflowTrackingMiddleware` intercepts every HTTP request to the API. It automatically starts an MLflow Run, tagging the HTTP method, status code, and latency.
+* **Traceability:** PydanticAI's internal tracing is hooked into MLflow, logging the entire **Chain of Thought** (Prompt -> Thought -> Tool Call -> Tool Result -> Final Answer):
+
+![](./assets/mlflow_.gif)
+
+* **Artifact Governance:**
+    * When the `/report` endpoint is called, the system packages the final Markdown report and the generated PNG images.
+    * These assets are uploaded to **MinIO** (via MLflow Artifacts) and linked to the unique Run ID.
+    * **Result:** A permanent, auditable record of exactly what report was generated, when, and based on what data.
+
+![](./assets/minio.gif)
+
+---
+
+### 6. API Architecture
+**File:** `api/src/routers/agent.py`
+
+The system exposes a unique endpoint via **FastAPI**:
+
+* **`POST /report`**: The core deliverable. It enforces a **Structured Task** via a specific prompt injection, compelling the agent to:
+    1.  Calculate the 4 mandatory KPIs.
+    2.  Generate the 2 mandatory charts.
+    3.  Perform the contextual web search.
+    4.  Return the final output as a standardized JSON containing the Markdown text and the list of generated plot references.
+
+    - **Contextual Steering:** It accepts an optional `focus_area` parameter. This parameter dynamically adjusts the system instructions, guiding the agent to filter data and tailor its qualitative analysis toward a specific cohort or variant without altering the underlying logic.
+
+![](./assets/fastapi.gif)
+
+---
+
+### 7. User Interface (Client Layer)
+**File:** `frontend/app.py`
+
+To demonstrate the API's capabilities, we implemented a frontend using **Streamlit**.
+* **Role:** It acts strictly as a **consumer client**. It does not perform any business logic.
+* **Function:** It sends requests to the FastAPI endpoints and renders the returned Markdown response. Crucially, it handles the dynamic resolution of image paths, displaying the locally generated plots served by the API's static file mount alongside the textual analysis, providing a seamless "Report View" experience for the end-user.
+
+![](./assets/streamlit_.gif)
+
+---
+
+## Setup & Installation

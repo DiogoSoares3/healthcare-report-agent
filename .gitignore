@@ -15,3 +15,5 @@ wheels/
 *.parquet
 *.db
 *png
+
+next_steps.md
