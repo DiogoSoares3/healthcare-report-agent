@@ -1,4 +1,23 @@
 services:
+  frontend:
+    image: python:3.13-slim
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    environment:
+      - API_INTERNAL_URL=http://api:8220/api/v1/agent/report
+      - API_PUBLIC_BASE_URL=http://localhost:8220
+    volumes:
+      - ./frontend/app.py:/app/app.py
+    working_dir: /app
+    command: >
+      sh -c "pip install streamlit requests && streamlit run app.py --server.address=0.0.0.0"
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - srag-net
+
   api:
     build:
       context: .
