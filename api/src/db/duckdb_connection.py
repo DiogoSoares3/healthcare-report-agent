@@ -1,8 +1,26 @@
+import logging
+
 import duckdb
 from duckdb import DuckDBPyConnection
+
 from api.src.config import get_settings
 
 settings = get_settings()
+logger = logging.getLogger(__name__)
+
+COLUMN_METADATA = {
+    "DT_NOTIFIC": "Notification Date. The primary timestamp for all temporal analysis (trends, seasonality).",
+    "age": "Patient Age (Years). Numeric value.",
+    "sex": "Biological Sex. Categories: M (Male), F (Female), I (Ignored).",
+    "outcome_lbl": "Case Outcome (Evolution). Indicates if patient recovered or died. CRITICAL for Mortality Rate.",
+    "icu_lbl": "ICU Admission Status (Yes/No). Indicates severity and resource usage.",
+    "diagnosis_lbl": "Final Diagnosis Classification. E.g., Influenza, Covid-19. Use this to differentiate outbreaks.",
+    "vaccine_lbl": "Influenza (Flu) Vaccination Status. Indicates if patient took the flu vaccine in the last campaign.",
+    "vaccine_cov_lbl": "COVID-19 Vaccination Status. Indicates if patient took the covid vaccine.",
+    "cardiopati_1": "Comorbidity: Heart Disease. (1 = Yes, 0 = No).",
+    "diabetes_1": "Comorbidity: Diabetes. (1 = Yes, 0 = No).",
+    "obesidade_1": "Comorbidity: Obesity. (1 = Yes, 0 = No).",
+}
 
 
 def get_db_connection(read_only: bool = True) -> DuckDBPyConnection:
@@ -28,7 +46,51 @@ def execute_query(query: str, params: tuple = None) -> list:
 def get_schema_info() -> str:
     con = get_db_connection()
     try:
-        df = con.execute("DESCRIBE srag_analytics").df()
-        return df.to_markdown(index=False)
+        try:
+            df_schema = con.execute("DESCRIBE srag_analytics").df()
+        except Exception as e:
+            return f"Error reading schema table: {e}"
+
+        schema_lines = []
+        schema_lines.append("Table: srag_analytics")
+        schema_lines.append("=" * 30)
+
+        for col_name, description in COLUMN_METADATA.items():
+            schema_row = df_schema[df_schema["column_name"] == col_name]
+
+            if schema_row.empty:
+                logger.warning(
+                    f"Column '{col_name}' defined in metadata but not found in DB table."
+                )
+                continue
+
+            col_type = schema_row.iloc[0]["column_type"]
+
+            values_str = ""
+            if "VARCHAR" in col_type.upper():
+                try:
+                    query = f"""
+                        SELECT {col_name}, COUNT(*) as freq
+                        FROM srag_analytics
+                        WHERE {col_name} IS NOT NULL
+                        GROUP BY {col_name}
+                        ORDER BY freq DESC
+                        LIMIT 5
+                    """
+                    df_distinct = con.execute(query).df()
+
+                    vals = [f"'{v}'" for v in df_distinct[col_name].tolist()]
+                    values_str = f" | Sample Values: [{', '.join(vals)}]"
+                except Exception:
+                    pass
+
+            line = f"- **{col_name}** ({col_type}) | Description: {description}{values_str}"
+            schema_lines.append(line)
+
+        return "\n".join(schema_lines)
+
+    except Exception as e:
+        logger.error(f"Failed to generate schema info: {e}")
+        return "Error: Could not retrieve database schema."
     finally:
         con.close()
