@@ -20,7 +20,7 @@ To ensure the solution is scalable, auditable, and maintainable, the following a
 
 **Criteria:** *Architecture selection*
 
-Instead of a complex Multi-Agent System (which often introduces unnecessary latency and orchestration overhead for this scope) or a rigid linear chain (which lacks flexibility), we implemented a **ReAct (Reason + Act) Agent** using **PydanticAI**.
+Instead of a complex Multi-Agent System (which often introduces unnecessary latency and orchestration overhead for this scope) or a rigid linear chain (which lacks flexibility), a **ReAct (Reason + Act) Agent** was implemented using **PydanticAI**.
 
 * **Why:** The problem requires the AI to iteratively "think" about the data it finds, decide if it needs more granularity, and then act.
 * **Implementation:** We inject Chain-of-Thought reasoning directly into the system prompt. This allows the agent to reason about tool outputs, SQL query results, chart generation, and news articles, before synthesizing the final report.
@@ -105,7 +105,7 @@ The project follows a Monorepo-style structure:
 
 The transition from a raw dataset to a production-grade Agent was driven by a methodical **Research-to-Production** lifecycle.
 
-Before implementing the API, we conducted some experiments:
+Before implementing the API, some experiments were conducted:
 1.  **`notebooks/1.0-eda.ipynb`**: Exploratory Data Analysis to understand the schema, identify missing values, and define the business logic for metrics (Mortality, ICU, Vaccination).
 2.  **`notebooks/2.0-agent-prototyping.ipynb`**: A "lab environment" where we tested prompt engineering strategies, guardrails and tool definitions against the DuckDB instance to validate response quality before deployment.
 
@@ -211,9 +211,13 @@ Built on **FastAPI** for high-performance async processing and seamless Pydantic
 
 ![](./assets/fastapi.gif)
 
+### 6. Testing & Quality Assurance
+
+Adhering to **Software Engineering best practices**, a local `pytest` suite at `api/tests` was implemented to establish the foundation for future CI/CD integration. The strategy prioritizes **Guardrail Validation**, utilizing deterministic mocks to simulate adversarial attacks (e.g., SQL Injection) and verify if the Agent's security mechanisms effectively block malicious inputs.
+
 ---
 
-### 6. Observability & Governance (MLflow)
+### 7. Observability & Governance (MLflow)
 **Files:** `middleware/observability.py` & `services/telemetry.py`
 
 To satisfy the "Governance" requirement, every interaction is audited.
@@ -232,10 +236,10 @@ To satisfy the "Governance" requirement, every interaction is audited.
 
 ---
 
-### 7. User Interface (Client Layer)
+### 8. User Interface (Client Layer)
 **File:** `frontend/app.py`
 
-To demonstrate the API's capabilities, we implemented a frontend using **Streamlit**.
+To demonstrate the API's capabilities, a frontend was implemented using **Streamlit**.
 * **Function:** It sends requests to the FastAPI endpoints and renders the returned Markdown response. Crucially, it handles the dynamic resolution of image paths, displaying the locally generated plots served by the API's static file mount alongside the textual analysis, providing a seamless "Report View" experience for the end-user.
 
 ![](./assets/streamlit_.gif)

@@ -21,7 +21,7 @@ class Settings(BaseSettings):
 
     OPENAI_API_KEY: SecretStr
     TAVILY_API_KEY: SecretStr
-    OPENAI_MODEL: str = "gpt-4.1-mini"
+    OPENAI_MODEL: str = "openai:gpt-4.1-mini"
 
     TEMPERATURE: float = 0.0
     MAX_INPUT_TOKENS: int = 1000
