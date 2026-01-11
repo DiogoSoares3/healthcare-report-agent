@@ -20,7 +20,7 @@ To ensure the solution is scalable, auditable, and maintainable, the following a
 
 **Criteria:** *Architecture selection*
 
-Instead of a complex Multi-Agent System (which often introduces unnecessary latency and orchestration overhead for this scope) or a rigid linear chain (which lacks flexibility), we implemented a **ReAct (Reason + Act) Agent**.
+Instead of a complex Multi-Agent System (which often introduces unnecessary latency and orchestration overhead for this scope) or a rigid linear chain (which lacks flexibility), we implemented a **ReAct (Reason + Act) Agent** using **PydanticAI**.
 
 * **Why:** The problem requires the AI to iteratively "think" about the data it finds, decide if it needs more granularity, and then act.
 * **Implementation:** We inject Chain-of-Thought reasoning directly into the system prompt. This allows the agent to reason about tool outputs, SQL query results, chart generation, and news articles, before synthesizing the final report.
@@ -36,10 +36,10 @@ We implemented a full observability layer using **MLflow** backed by **PostgreSQ
 ### 3. Safety & Guardrails
 **Criteria:** *Guardrails* and *Sensitive Data Handling*
 
-We adhere to a "Security First" approach, implementing a **Defense-in-Depth** strategy that handles data privacy at both the storage and interaction levels:
+We adhere to a "Security First" approach, implementing a **Defense-in-Depth** strategy that addresses data privacy across both storage and interaction layers, supported by **PydanticAI-Guardrails** for interaction-level enforcement:
 
 * **Data Minimization (Preprocessing):** Before any data enters the analytical environment, we perform a strict selection of pertinent columns from the raw CSV. Sensitive Personal Identifiable Information (PII) such as Names and CPFs were explicitly discarded during the ETL process to DuckDB, as they are not necessary for the required aggregated metrics (mortality, occupation, vaccination rates).
-* **Input Guardrails:** We utilize `PydanticAI-Guardrails` as an active interception layer. It scans user prompts for potential PII or malicious intent before the LLM processes them.
+* **Input Guardrails:** We utilize Guardrails as an active interception layer. It scans user prompts for potential PII, prompt injection or any malicious intent before the LLM processes them.
 * **System Prompt Instruction:** As a secondary safety net, the System Prompt is rigorously instructed to reject any request that attempts to solicit sensitive information, ensuring compliance even if a guardrail is bypassed.
 * **Output/Execution Guardrails:** A custom validator intercepts tool execution, specifically for the SQL tool (`stats_tool`). It ensures the agent cannot execute destructive commands (`DROP`, `DELETE`) or access restricted schemas within the Data Warehouse.
 
@@ -60,7 +60,7 @@ The stack was chosen to reflect modern Python engineering standards, prioritizin
 
 | Component | Technology | Reasoning |
 | :--- | :--- | :--- |
-| **Orchestrator** | **PydanticAI** | Provides a production-grade framework with Dependency Injection, strong type validation, and structured outputs. |
+| **Orchestrator** | **PydanticAI** | Provides a production-grade framework with Dependency Injection, strong type validation, and robust structured outputs. |
 | **API** | **FastAPI** | High-performance, async-native REST API. Integrates natively with Pydantic for request/response validation. |
 | **Data Warehouse** | **DuckDB** | In-process OLAP database optimized for analytical queries on the CSV dataset. |
 | **Observability** | **MLflow** | Tracks agent runs, prompts, and tool usage metrics. |
@@ -134,11 +134,11 @@ The `SRAGAgentOrchestrator` serves as the center of the application, responsible
 
 We build a **system prompt** at runtime that serves as a structured guidance layer for the model. This prompt injects domain knowledge before the agent begins its reasoning process:
 
-* **Dynamic Schema Injection:** The prompt receives a live string representation of the DuckDB schema (columns, types, and *sample values*). This drastically reduces SQL generation errors by ensuring the LLM knows exactly what the data looks like.
+* **Dynamic Schema Injection:** The prompt receives a live string representation of the DuckDB schema (columns, types, description and *sample values*). This drastically reduces SQL generation errors by ensuring the LLM knows exactly what the data looks like.
 * **Business Logic Encoding:** We explicitly define the SQL formulas for KPIs (e.g., *"Mortality Rate = Deaths / (Deaths + Cures)"*) directly in the prompt. This prevents the LLM from hallucinating incorrect mathematical definitions for health metrics.
 * **Strategic Execution Plan:** The prompt enforces a Chain-of-Thought methodology:
     1.  *Explore* (Query DB)
-    2.  *Identify* (Find Anomalies)
+    2.  *Analyse* (Understand results)
     3.  *Search* (Find external news context)
     4.  *Synthesize* (Report).
 * **Technical Constraints:** It includes strict SQL generation rules, such as enforcing `NULLIF` for division-by-zero protection, etc.
@@ -146,34 +146,38 @@ We build a **system prompt** at runtime that serves as a structured guidance lay
 #### B. Dependency Injection & Inversion of Control
 **Files:** `api/src/agents/deps.py` & `api/src/routers/agent.py`
 
-The architecture relies on **Dependency Injection (DI)** to ensure testability and decoupling. We implement DI at two distinct levels:
+The architecture relies heavily on **Dependency Injection (DI)** to ensure architectural robustness. We implement DI at two distinct levels:
 
 1.  **Application Level (FastAPI):**
-    The `SRAGAgentOrchestrator` itself is injected into the API routes using FastAPI's `Depends` system. This allows the API to remain agnostic of how the agent is constructed, permitting easy swapping of configuration settings or LLM backends without touching the router logic.
+    The `SRAGAgentOrchestrator` is injected into API routes using FastAPI's `Depends` system. This allows the API to remain agnostic of how the agent is constructed, permitting easy swapping of configuration settings or LLM backends without touching the router logic.
 
 2.  **Runtime Level (PydanticAI):**
-    We utilize typed `AgentDeps` to inject runtime resources into the Agent's tools.
-    * **The Mechanism:** Instead of tools importing global database connections (which makes testing impossible), the `stats_tool` and `plot_tool` receive the `db_path` via the context object (`ctx.deps`) at runtime.
-    * **Benefit:** This ensures the tools are stateless and thread-safe. A tool execution depends entirely on the context passed to it by the Orchestrator, ensuring that multiple users can trigger parallel analyses without race conditions on database resources.
+    We utilize typed `AgentDeps` to inject runtime resources into the Agent's tools via the execution context (`ctx.deps`), avoiding global state.
 
+**Architectural Benefits:**
+- **Testability**: Dependencies can be trivially replaced with mocks or in-memory implementations during testing, enabling high coverage without side effects.
+- **Decoupling**: Components remain stateless and agnostic of their execution environment, increasing modularity and maintainability.
 ---
 
 ### 3. Tooling & Capabilities
 
 The Agent interacts with the world through three specialized tools, each adhering to the **Single Responsibility Principle**:
 
-#### A. Analytical Engine (`stats_tool`)
+#### A. Analytical Engine (`api/src/tools/stats.py`)
+* **Name:** `stats_tool`
 * **Function:** Executes SQL queries generated by the LLM.
 * **Safety Mechanism:** It includes a custom **SQL Validator** (`validate_sql_safety`) that parses the query string and strictly blocks destructive commands (`DROP`, `DELETE`, `UPDATE`) before they reach the database engine.
 
-#### B. Visualization Engine (`plot_tool`)
+#### B. Visualization Engine (`api/src/tools/plot.py`)
+* **Name:** `plot_tool`
 * **Function:** Generates `matplotlib`/`seaborn` charts (Line or Bar plots) based on the data context.
 * **The "Blind Agent" Problem:** Since the LLM cannot "see" the image it generates, this tool implements a **Dual-Return Strategy**:
     1.  **Artifact Persistence:** It saves the high-resolution PNG to the shared volume (`data/plots/`).
     2.  **Cognitive & Structural Feedback:** It returns a text payload containing a **Statistical Summary** (so the agent can reason about the data) and the **Exact Filename**.
-    * *Path Resolution:* This explicit return allows the Agent to autonomously embed the image into the final Markdown report using the correct static asset path (`/api/v1/plots/<filename>`). This guarantees that the frontend renders the image correctly.
+        - **Path Resolution:** The filename return allows the Agent to autonomously embed the image into the final Markdown report using the correct static asset path (`/api/v1/plots/<filename>`). This guarantees that the frontend renders the image correctly.
 
-#### C. Context Retrieval (`search_tool`)
+#### C. Context Retrieval (`api/src/tools/seach.py`)
+* **Name:** `tavily_search`
 * **Function:** Wraps the **Tavily API** to fetch real-time news.
 * **Strategy:** The system prompt instructs the agent to use this tool to ground and support business metrics.
 
@@ -193,7 +197,23 @@ We implement a **Defense-in-Depth** strategy wrapping the Agent:
 
 ---
 
-### 5. Observability & Governance (MLflow)
+### 5. API Architecture & Lifecycle
+**Files:** `api/main.py`, `api/src/routers/agent.py`, `api/src/config.py`
+
+Built on **FastAPI** for high-performance async processing and seamless Pydantic integration.
+
+* **Lifecycle Management (`lifespan`):** Ensures a deterministic startup sequence. The application provisions storage paths, initializes MLflow telemetry, and verifies DuckDB integrity (automatically triggering ETL if needed) *before* accepting requests.
+* **Static Asset Serving (`app.mount`):** Exposes the `/api/v1/plots` endpoint to serve generated charts. This allows the Frontend to render agent-created images via standard Markdown links, completely decoupling visualization logic from the UI.
+* **Strict Configuration:** Utilizes `pydantic-settings` to strictly validate environment variables (API Keys, Model Params) at boot, enforcing a "Fail-Fast" policy for missing credentials.
+* **Core Endpoint (`POST /report`):** Orchestrates the generation of the Executive Report via a structured prompt injection.
+    * **Workflow:** Enforces the calculation of 4 KPIs, generation of 2 charts, and contextual web search.
+    * **Contextual Steering:** Accepts an optional `focus_area` parameter (e.g., *"Analyze H3N2"*), which dynamically adjusts system instructions to guide the agent's focus without code changes.
+
+![](./assets/fastapi.gif)
+
+---
+
+### 6. Observability & Governance (MLflow)
 **Files:** `middleware/observability.py` & `services/telemetry.py`
 
 To satisfy the "Governance" requirement, every interaction is audited.
@@ -212,28 +232,10 @@ To satisfy the "Governance" requirement, every interaction is audited.
 
 ---
 
-### 6. API Architecture
-**File:** `api/src/routers/agent.py`
-
-The system exposes a unique endpoint via **FastAPI**:
-
-* **`POST /report`**: The core deliverable. It enforces a **Structured Task** via a specific prompt injection, compelling the agent to:
-    1.  Calculate the 4 mandatory KPIs.
-    2.  Generate the 2 mandatory charts.
-    3.  Perform the contextual web search.
-    4.  Return the final output as a standardized JSON containing the Markdown text and the list of generated plot references.
-
-    - **Contextual Steering:** It accepts an optional `focus_area` parameter. This parameter dynamically adjusts the system instructions, guiding the agent to filter data and tailor its qualitative analysis toward a specific cohort or variant without altering the underlying logic.
-
-![](./assets/fastapi.gif)
-
----
-
 ### 7. User Interface (Client Layer)
 **File:** `frontend/app.py`
 
 To demonstrate the API's capabilities, we implemented a frontend using **Streamlit**.
-* **Role:** It acts strictly as a **consumer client**. It does not perform any business logic.
 * **Function:** It sends requests to the FastAPI endpoints and renders the returned Markdown response. Crucially, it handles the dynamic resolution of image paths, displaying the locally generated plots served by the API's static file mount alongside the textual analysis, providing a seamless "Report View" experience for the end-user.
 
 ![](./assets/streamlit_.gif)
