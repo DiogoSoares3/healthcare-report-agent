@@ -4,6 +4,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from api.src.middleware.observability import MLflowTrackingMiddleware
 from api.src.services.ingest import run_pipeline
 from api.src.routers import agent
 from api.src.config import get_settings
@@ -36,6 +37,8 @@ app = FastAPI(
     lifespan=lifespan,
     docs_url="/api/v1/docs",
 )
+
+app.add_middleware(MLflowTrackingMiddleware)
 
 ### For Frontend access to plots
 app.mount("/api/v1/plots", StaticFiles(directory=settings.PLOTS_DIR), name="plots")

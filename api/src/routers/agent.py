@@ -1,15 +1,14 @@
 import logging
 import time
-from contextlib import nullcontext
 
 from fastapi import APIRouter, Depends, HTTPException
-import mlflow
 
 from api.src.schemas import ChatRequest, ReportRequest, AgentResponse
 from api.src.agents.orchestrator import get_orchestrator, SRAGAgentOrchestrator
 from api.src.services.manage_plots import extract_plots_from_result
 from api.src.db.minio_connection import upload_run_artifacts
 from api.src.config import get_settings
+from api.src.services.telemetry import set_trace_tags
 
 router = APIRouter(prefix="/api/v1/agent", tags=["Agent"])
 logger = logging.getLogger(__name__)
@@ -52,6 +51,12 @@ async def generate_report(
     """
     start_time = time.time()
 
+    tags = {
+        "genai.task": "executive_report",
+        "genai.focus_area": request.focus_area if request.focus_area else "general",
+    }
+    set_trace_tags(tags)
+
     report_prompt = (
         "Generate a comprehensive **Executive Report** on the current **SRAG situation**.\n"
         "STRICTLY FOLLOW this structure and formatting rules:\n\n"
@@ -78,18 +83,12 @@ async def generate_report(
         )
 
     try:
-        if settings.MLFLOW_ENABLE:
-            active_run_context = mlflow.start_run(run_name=f"report_{int(time.time())}")
-        else:
-            active_run_context = nullcontext()
+        result = await orchestrator.run(report_prompt)
 
-        with active_run_context:
-            result = await orchestrator.run(report_prompt)
+        generated_plots = extract_plots_from_result(result)
+        response_text = result.output
 
-            generated_plots = extract_plots_from_result(result)
-            response_text = result.output
-
-            upload_run_artifacts(response_text, generated_plots)
+        upload_run_artifacts(response_text, generated_plots)
 
         return AgentResponse(
             response=response_text,
