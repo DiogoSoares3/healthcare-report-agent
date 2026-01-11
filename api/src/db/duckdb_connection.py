@@ -33,16 +33,6 @@ def get_db_connection(read_only: bool = True) -> DuckDBPyConnection:
     return con
 
 
-def execute_query(query: str, params: tuple = None) -> list:
-    con = get_db_connection()
-    try:
-        if params:
-            return con.execute(query, params).fetchall()
-        return con.execute(query).fetchall()
-    finally:
-        con.close()
-
-
 def get_schema_info() -> str:
     con = get_db_connection()
     try:
