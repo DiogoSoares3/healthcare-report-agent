@@ -1,0 +1,36 @@
+site_name: Automated Healthcare Reporting
+docs_dir: docs/
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: 'indigo'
+      accent: 'indigo'
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: 'indigo'
+      accent: 'indigo'
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.top
+    - toc.integrate
+    - content.code.annotate
+    - content.tabs.link
+    - search.highlight
+    - search.share
+    - header.autohide
+    - header.sticky
+    - navigation.tracking
+    - mode-toggle
+  language: en
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        paths: [api]
+        load_external_modules: true
+        options:
+          show_source: true

@@ -126,6 +126,24 @@ services:
     networks:
       - srag-net
 
+  mkdocs:
+    image: squidfunk/mkdocs-material:latest
+    container_name: mkdocs
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./:/docs
+    networks:
+      - srag-net
+    entrypoint: >
+      /bin/sh -c "
+      pip install --no-cache-dir mkdocstrings[python] &&
+      mkdocs serve --dev-addr=0.0.0.0:8000
+      "
+
 
 volumes:
   postgres_data:
