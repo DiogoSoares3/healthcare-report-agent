@@ -37,6 +37,7 @@ app = FastAPI(
     docs_url="/api/v1/docs",
 )
 
+### For Frontend access to plots
 app.mount("/api/v1/plots", StaticFiles(directory=settings.PLOTS_DIR), name="plots")
 
 app.include_router(agent.router)

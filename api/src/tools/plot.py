@@ -31,30 +31,24 @@ class PlotTool:
     def __call__(
         self,
         ctx: RunContext[AgentDeps],
-        chart_type: str,  # Note: Pydantic validation handles the Literal constraint externally via Schema
+        chart_type: str,
     ) -> str:
-        """
-        Generates a chart and saves it to disk.
-
-        Args:
-            ctx: Runtime context containing DB connection.
-            chart_type: 'trend_30d' or 'history_12m'.
-        """
         logger.info(f"Agent requested chart: {chart_type}")
-
         con = ctx.deps.get_db_connection(read_only=True)
 
         try:
             max_date_res = con.execute(
                 "SELECT MAX(DT_NOTIFIC) FROM srag_analytics"
             ).fetchone()
+
             if not max_date_res or not max_date_res[0]:
                 return "Error: Database is empty."
 
             max_date = max_date_res[0]
 
             sns.set_theme(style="whitegrid")
-            plt.figure(figsize=(10, 6))
+            fig, ax = plt.subplots(figsize=(10, 6))
+
             stats_summary = ""
 
             if chart_type == "trend_30d":
@@ -67,7 +61,6 @@ class PlotTool:
                 df = con.execute(query).df()
                 df["DT_NOTIFIC"] = pd.to_datetime(df["DT_NOTIFIC"])
 
-                # Resample to ensure empty days are zero-filled
                 df = (
                     df.set_index("DT_NOTIFIC")
                     .resample("D")
@@ -76,7 +69,6 @@ class PlotTool:
                     .reset_index()
                 )
 
-                # Business Logic: Growth Calculation
                 last_7d = df.tail(7)["cases"].sum()
                 prev_7d = df.iloc[-14:-7]["cases"].sum()
                 growth_rate = (
@@ -85,21 +77,26 @@ class PlotTool:
                 peak_day = df.loc[df["cases"].idxmax()]
 
                 stats_summary = (
-                    f"DATA SUMMARY FOR AGENT: The 30-day trend shows a growth rate of {growth_rate:+.1f}% "
-                    f"compared to the previous week. Total cases in the last 7 days: {last_7d}. "
-                    f"Peak: {peak_day['cases']} cases on {peak_day['DT_NOTIFIC'].strftime('%Y-%m-%d')}."
+                    f"DATA SUMMARY FOR AGENT: Growth rate: {growth_rate:+.1f}%. "
+                    f"Last 7 days total: {last_7d}. "
+                    f"Peak: {peak_day['cases']} on {peak_day['DT_NOTIFIC'].strftime('%Y-%m-%d')}."
                 )
 
                 cutoff_30d = pd.to_datetime(max_date) - pd.Timedelta(days=30)
                 plot_df = df[df["DT_NOTIFIC"] >= cutoff_30d]
 
                 sns.lineplot(
-                    data=plot_df, x="DT_NOTIFIC", y="cases", marker="o", color="#d62728"
+                    data=plot_df,
+                    x="DT_NOTIFIC",
+                    y="cases",
+                    marker="o",
+                    color="#d62728",
+                    ax=ax,
                 )
 
                 trend_icon = "📈" if growth_rate > 0 else "📉"
-                plt.title(f"30-Day Trend | Growth: {growth_rate:+.1f}% {trend_icon}")
-                plt.xticks(rotation=45)
+                ax.set_title(f"30-Day Trend | Growth: {growth_rate:+.1f}% {trend_icon}")
+                ax.tick_params(axis="x", rotation=45)
 
             elif chart_type == "history_12m":
                 query = f"""
@@ -115,27 +112,35 @@ class PlotTool:
                 avg_cases = df["cases"].mean()
 
                 stats_summary = (
-                    f"DATA SUMMARY FOR AGENT: Last 12 months total: {total_cases}. "
-                    f"Monthly Avg: {avg_cases:.1f}. Peak: {peak_month['month_str']} ({peak_month['cases']} cases)."
+                    f"DATA SUMMARY FOR AGENT: 12 months total: {total_cases}. "
+                    f"Avg: {avg_cases:.1f}. Peak: {peak_month['month_str']}."
                 )
 
-                sns.barplot(data=df, x="month_str", y="cases", color="#1f77b4")
-                plt.title("12-Month History")
-                plt.xticks(rotation=45)
+                sns.barplot(data=df, x="month_str", y="cases", color="#1f77b4", ax=ax)
+                ax.set_title("12-Month History")
+                ax.tick_params(axis="x", rotation=45)
 
-            plt.tight_layout()
+            fig.tight_layout()
+
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             filename = f"{chart_type}_{timestamp}.png"
             filepath = self.output_dir / filename
 
-            plt.savefig(filepath, format="png", dpi=100)
-            plt.close()
+            fig.savefig(
+                filepath, format="png", dpi=100, facecolor="white", bbox_inches="tight"
+            )
+
+            plt.close(fig)
 
             logger.info(f"Plot saved to {filepath}")
             return f"**System Note:** Chart generated at {filepath}.\n\n{stats_summary}"
 
         except Exception as e:
             logger.error(f"Plot generation failed: {e}", exc_info=True)
+
+            if "fig" in locals():
+                plt.close(fig)
+
             return f"Error generating chart: {str(e)}"
 
         finally:
