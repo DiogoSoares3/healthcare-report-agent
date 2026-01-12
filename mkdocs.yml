@@ -30,7 +30,7 @@ plugins:
 - mkdocstrings:
     handlers:
       python:
-        paths: [api]
+        paths: [api,api/src]
         load_external_modules: true
         options:
           show_source: true

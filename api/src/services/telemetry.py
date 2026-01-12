@@ -8,8 +8,21 @@ settings = get_settings()
 
 def setup_telemetry():
     """
-    Initializes MLflow instrumentation for PydanticAI.
-    Should be called at application startup.
+    Configures the global telemetry and experiment tracking settings.
+
+    This function initializes the connection to the MLflow server and enables
+
+    **PydanticAI Autologging**. This feature automatically captures:
+
+    - LLM Prompts and Completions.
+    - Tool calls and outputs.
+    - Token usage and latency.
+
+    **Configuration:**
+
+    - Reads `MLFLOW_TRACKING_URI` from settings.
+    - Sets the active experiment to `MLFLOW_EXPERIMENT_NAME`.
+    - Enables `log_traces=True` for detailed trace views.
     """
     if not settings.MLFLOW_ENABLE:
         logger.info("Telemetry (MLflow) is disabled via config.")
@@ -31,8 +44,13 @@ def setup_telemetry():
 
 def set_trace_tags(tags: dict):
     """
-    Helper to add metadata tags to the current active trace/run.
-    Useful for filtering traces by endpoint or user focus area.
+    Attaches metadata tags to the current active MLflow run/trace.
+
+    This allows for better filtering and organization of traces in the MLflow UI
+    (e.g., filtering all reports focused on 'pediatrics').
+
+    Args:
+        tags (dict): A dictionary of key-value pairs (e.g., `{'focus': 'ICU'}`).
     """
     if not settings.MLFLOW_ENABLE:
         return

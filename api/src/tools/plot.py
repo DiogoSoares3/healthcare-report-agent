@@ -20,7 +20,20 @@ logger = logging.getLogger(__name__)
 @dataclass
 class PlotTool:
     """
-    Tool responsible for generating and saving visualization charts.
+    Tool responsible for generating and saving visualization charts based on SRAG data.
+
+    Unlike a generic plotting tool, this is highly specialized. It executes pre-defined
+    SQL aggregations to guarantee correct statistical representation for specific
+    chart types (`trend_30d` and `history_12m`).
+
+    **Dual Output Strategy:**
+
+    1.  **Visual:** Saves a PNG file to disk.
+    2.  **Semantic:** Returns a text summary (growth rates, peaks, totals) to the LLM.
+        This allows the Agent to "see" the data and describe the chart accurately in the report.
+
+    Attributes:
+        output_dir (Path): The directory where PNG files will be saved.
     """
 
     output_dir: Path
@@ -33,6 +46,17 @@ class PlotTool:
         ctx: RunContext[AgentDeps],
         chart_type: str,
     ) -> str:
+        """
+        Generates the requested chart and returns a status message with data insights.
+
+        Args:
+            ctx (RunContext): The context containing the database connection.
+            chart_type (str): The type of chart to generate ('trend_30d' or 'history_12m').
+
+        Returns:
+            str: A system note containing the file path of the generated chart AND
+                 a statistical summary of the data plotted (e.g., "Growth: +15%").
+        """
         logger.info(f"Agent requested chart: {chart_type}")
         con = ctx.deps.get_db_connection(read_only=True)
 
@@ -149,7 +173,13 @@ class PlotTool:
 
 def create_plot_tool(output_dir: Path) -> Tool[AgentDeps]:
     """
-    Factory to create the Plot Tool with a configured output directory.
+    Factory to create the Plot Tool instance.
+
+    Args:
+        output_dir (Path): The target directory for saving chart images.
+
+    Returns:
+        Tool: The Pydantic AI Tool wrapping the PlotTool class.
     """
     return Tool(
         PlotTool(output_dir=output_dir).__call__,

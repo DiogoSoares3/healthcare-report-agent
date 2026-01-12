@@ -16,6 +16,25 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    Manages the application lifecycle (startup and shutdown events).
+
+    This context manager handles the initialization of critical services before the
+    API starts accepting requests.
+
+    **Startup Sequence:**
+
+    1.  **Directory Setup:** Creates the `PLOTS_DIR` if it does not exist.
+    2.  **Telemetry:** Initializes OpenTelemetry/Tracing setup.
+    3.  **Data Integrity (ETL):** Triggers the `run_pipeline()` function to ensure
+        clean data is available for the agents. If this fails, a critical error is logged.
+
+    Args:
+        app (FastAPI): The FastAPI application instance.
+
+    Yields:
+        None: Control is yielded back to the application loop.
+    """
     settings.PLOTS_DIR.mkdir(parents=True, exist_ok=True)
     setup_telemetry()
 
@@ -48,4 +67,12 @@ app.include_router(agent.router)
 
 @app.get("/health")
 def health_check():
+    """
+    Performs a basic health check of the API and database availability.
+
+    Returns:
+        dict: A dictionary containing:
+            - `status` (str): The general status of the API (e.g., "ok").
+            - `db_ready` (bool): True if the SQLite database file exists at `DB_PATH`.
+    """
     return {"status": "ok", "db_ready": settings.DB_PATH.exists()}

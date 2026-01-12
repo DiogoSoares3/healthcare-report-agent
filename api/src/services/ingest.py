@@ -14,6 +14,21 @@ settings = get_settings()
 
 
 def download_data():
+    """
+    Downloads the SRAG data CSV from the official source if not present locally.
+
+    This function implements a streaming download to handle large files efficiently
+    without consuming excessive memory.
+
+    **Checks:**
+
+    - If `RAW_DATA_PATH` exists and `FORCE_UPDATE` is false, the download is skipped.
+    - Creates parent directories if they don't exist.
+
+    Raises:
+        requests.exceptions.HTTPError: If the remote server returns an error code (4xx/5xx).
+        IOError: If writing to the local disk fails.
+    """
     if (
         settings.RAW_DATA_PATH.exists()
         and os.getenv("FORCE_UPDATE", "false").lower() != "true"
@@ -41,6 +56,27 @@ def download_data():
 
 
 def process_and_load():
+    """
+    Processes the raw CSV data and loads it into a DuckDB database.
+
+    This function performs the 'Transform' and 'Load' steps of the ETL pipeline:
+
+    1.  **Read:** Loads specific columns from the raw CSV using Pandas.
+    2.  **Clean:**
+        - Converts dates and handles parsing errors.
+        - Maps categorical codes (e.g., 1, 2) to human-readable labels (e.g., 'Cure', 'Death').
+        - Normalizes binary fields (vaccination, comorbidities).
+    3.  **Load:** Persists the processed DataFrame into a DuckDB table (`srag_analytics`).
+
+    **Column Mappings Applied:**
+
+    - `outcome_lbl`: 1 -> Cure, 2 -> Death_SRAG, 3 -> Death_Other.
+    - `diagnosis_lbl`: 1 -> Influenza, 5 -> Covid-19.
+    - `icu_lbl`, `vaccine_*`: 1 -> Yes, 2 -> No.
+
+    Raises:
+        Exception: If data processing fails (e.g., memory issues, schema mismatch).
+    """
     logger.info("Starting data processing...")
 
     selected_cols = [
@@ -115,6 +151,19 @@ def process_and_load():
 
 
 def run_pipeline():
+    """
+    Orchestrates the full ETL (Extract, Transform, Load) pipeline.
+
+    This is the main entry point for data ingestion. It ensures that the application
+    has a valid local database to work with. It respects caching mechanisms to avoid
+    redundant work on restart.
+
+    **Logic:**
+
+    1.  Checks if the database (`DB_PATH`) already exists.
+    2.  If it exists and `FORCE_UPDATE` is False, it skips execution (Idempotency).
+    3.  Otherwise, triggers `download_data()` followed by `process_and_load()`.
+    """
     if settings.DB_PATH.exists() and not settings.FORCE_UPDATE:
         logger.info(
             "DuckDB database already exists and FORCE_UPDATE=false. Using cached data."

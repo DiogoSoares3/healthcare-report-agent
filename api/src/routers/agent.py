@@ -24,10 +24,30 @@ async def generate_report(
     """
     Generates the Executive Report as required by the GenAI Challenge.
 
-    This endpoint injects a strict system prompt instruction to ensure the Agent:
-    1. Calculates the 4 Key Metrics (Case Increase, Mortality, ICU, Vaccination).
-    2. Generates the 2 Required Charts (30-day Trend, 12-Month History).
-    3. Searches for News to contextually explain the data.
+    This endpoint acts as the main entry point for the AI reporting workflow.
+    It constructs a strict system prompt and delegates execution to the `SRAGAgentOrchestrator`.
+
+    **Workflow:**
+
+    1.  **Prompt Construction**: Injects a structured prompt ensuring the Agent calculates
+        4 key metrics (Case Increase, Mortality, ICU, Vaccination) and generates
+        2 mandatory charts (Trend, History).
+    2.  **Context Injection**: If `focus_area` is provided in the request, it is appended
+        to the prompt to guide the news search.
+    3.  **Execution**: Runs the ReAct agent loop.
+    4.  **Artifact Handling**: Extracts generated plot filenames from the agent's output
+        and uploads artifacts (text + plots) to storage (MinIO/S3).
+
+    Args:
+        request (ReportRequest): Input payload containing focus areas.
+        orchestrator (SRAGAgentOrchestrator): The dependency-injected agent orchestrator.
+
+    Returns:
+        AgentResponse: Object containing the generated markdown, list of plot paths,
+        and execution metrics.
+
+    Raises:
+        HTTPException: If the agent execution fails or an internal error occurs (500).
     """
     start_time = time.time()
 

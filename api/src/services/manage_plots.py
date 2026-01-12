@@ -6,11 +6,18 @@ from pydantic_ai.messages import ToolReturnPart
 
 def extract_plots_from_result(result: AgentRunResult) -> list[str]:
     """
-    Scans the agent's execution trace to find generated plot filenames
-    from 'plot_tool' tool returns.
+    Parses the Agent's execution trace to identify generated plot files.
 
-    - Handles absolute paths (e.g., /app/data/plots/file.png)
-    - Handles relative paths (e.g., data/plots/file.png)
+    Since the LLM calls a plotting tool, the filename is returned within a
+    `ToolReturnPart` message. This function scans the history to extract these
+    filenames reliably, rather than relying on the LLM's final text description.
+
+    Args:
+        result (AgentRunResult): The result object returned by `agent.run()`.
+
+    Returns:
+        list[str]: A list of unique filenames (e.g., `['trend_30d.png']`) found
+        in the tool execution outputs.
     """
     plot_files = []
 
@@ -34,6 +41,21 @@ def extract_plots_from_result(result: AgentRunResult) -> list[str]:
 
 
 def create_offline_markdown(original_text: str, plot_filenames: list[str]) -> str:
+    """
+    Rewrites image links in the Markdown report for offline portability.
+
+    The live API serves images via endpoints (e.g., `/api/v1/plots/...`).
+    However, when saving the report to MLflow or zip files, these links need
+    to be relative filesystem paths (e.g., `plots/...`) to render correctly
+    without a running server.
+
+    Args:
+        original_text (str): The Markdown text with API URLs.
+        plot_filenames (list[str]): List of valid plot filenames to verify/replace.
+
+    Returns:
+        str: The Markdown text with updated image paths.
+    """
     offline_text = original_text
 
     offline_text = re.sub(

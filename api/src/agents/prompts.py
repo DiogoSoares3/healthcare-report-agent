@@ -2,6 +2,20 @@ from datetime import datetime
 
 
 def build_system_prompt(schema_info: str) -> str:
+    """
+    Constructs the system prompt for the SRAG Agent.
+
+    This function sets the Agent's persona as a Senior Data Analyst and injects
+    dynamic context, including the current date and the database schema.
+    It serves as the "source of truth" for business logic metrics (Mortality, ICU)
+    and SQL safety constraints.
+
+    Args:
+        schema_info (str): The textual representation of the database schema.
+
+    Returns:
+        str: The fully formatted system prompt string.
+    """
     today = datetime.now().strftime("%Y-%m-%d")
 
     return f"""

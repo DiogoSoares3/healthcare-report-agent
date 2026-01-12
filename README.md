@@ -324,4 +324,4 @@ Once the stack is up and running, you can access the various components via the 
 | **Backend** | FastAPI | [http://localhost:8220/api/v1/docs](http://localhost:8220/api/v1/docs) | OpenAPI (Swagger) documentation and API testing. |
 | **Observability** | MLflow UI | [http://localhost:5000](http://localhost:5000) | Track traces, agent runs, and download generated artifacts. |
 | **Storage** | MinIO Console | [http://localhost:9001](http://localhost:9001) | Object storage browser (Login: `minio_admin` / `minio_password`). |
-| **Documentation** | Mkdocs | [http://localhost:800](http://localhost:8000) | Mkdocs UI for code documentation. |
+| **Documentation** | Mkdocs | [http://localhost:8000](http://localhost:8000) | Mkdocs UI for code documentation. |

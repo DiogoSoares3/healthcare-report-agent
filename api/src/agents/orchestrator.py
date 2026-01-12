@@ -30,8 +30,28 @@ logger = logging.getLogger(__name__)
 
 class SRAGAgentOrchestrator:
     """
-    Orchestrates the lifecycle of the SRAG Reporting Agent.
-    Implements the Singleton pattern via lru_cache for efficiency.
+    Orchestrates the lifecycle, configuration, and security of the SRAG Reporting Agent.
+
+    This class acts as the central factory for the AI Agent. It assembles the
+    System Prompt (with dynamic schema info), registers the Tools, and applies
+    Input/Output Guardrails to ensure safe execution.
+
+    **Key Responsibilities:**
+
+    1.  **Schema Injection:** Loads the latest database schema metadata into the system prompt.
+    2.  **Tool Registration:** Binds `stats_tool`, `plot_tool`, and `tavily_search` to the LLM.
+    3.  **Guardrails (Input):**
+        - `length_limit`: Prevents DoS attacks via huge payloads.
+        - `pii_detector`: (Optional) Flag potential PII leaks.
+        - `prompt_injection`: Scans for jailbreak attempts.
+        - `toxicity_detector`: Filters offensive content.
+    4.  **Guardrails (Output/Tool):**
+        - `validate_tool_parameters`: Enforces strict schema compliance and calls
+          custom validators (e.g., `validate_sql_safety` to block DROP/DELETE queries).
+
+    Attributes:
+        settings (Settings): Application configuration.
+        agent (GuardedAgent): The configured PydanticAI instance wrapped with security layers.
     """
 
     def __init__(self, settings: Settings):
@@ -84,6 +104,19 @@ class SRAGAgentOrchestrator:
         logger.info("SRAG Agent initialized with Guardrails.")
 
     async def run(self, query: str) -> AgentRunResult:
+        """
+        Executes the Agent pipeline for a given user query.
+
+        Args:
+            query (str): The prompt/instruction for the agent.
+
+        Returns:
+            AgentRunResult: The result object containing the final text response,
+            usage statistics (tokens), and message history.
+
+        Raises:
+            Exception: Propagates any runtime errors from the LLM or tools.
+        """
         logger.info(f"Agent received query: {query}")
 
         deps = AgentDeps(
@@ -106,4 +139,10 @@ class SRAGAgentOrchestrator:
 def get_orchestrator(
     settings: Settings = Depends(get_settings),
 ) -> SRAGAgentOrchestrator:
+    """
+    Dependency Injection Provider for the Agent Orchestrator.
+
+    Uses `lru_cache` to implement the Singleton pattern, ensuring the Agent
+    (and its heavy model initialization) is created only once per application lifecycle.
+    """
     return SRAGAgentOrchestrator(settings)

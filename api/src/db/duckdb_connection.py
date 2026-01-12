@@ -24,6 +24,20 @@ COLUMN_METADATA = {
 
 
 def get_db_connection(read_only: bool = True) -> DuckDBPyConnection:
+    """
+    Establishes a connection to the local DuckDB database.
+
+    Args:
+        read_only (bool): If True, opens the database in read-only mode to prevent
+            accidental writes during analysis. Defaults to `True`.
+
+    Returns:
+        DuckDBPyConnection: The active database connection object.
+
+    Raises:
+        FileNotFoundError: If the database file (`srag_analytics.db`) does not exist
+            at the configured path (usually indicating the ETL pipeline hasn't run).
+    """
     if not settings.DB_PATH.exists():
         raise FileNotFoundError(
             f"Database not found at {settings.DB_PATH}. Run ETL pipeline first."
@@ -34,6 +48,25 @@ def get_db_connection(read_only: bool = True) -> DuckDBPyConnection:
 
 
 def get_schema_info() -> str:
+    """
+    Generates a rich, LLM-friendly textual representation of the database schema.
+
+    This function combines static metadata descriptions with dynamic data profiling
+    to help the AI Agent understand the dataset's structure and content.
+
+    **Process:**
+
+    1.  **Reflect Schema:** Queries DuckDB to get column names and types.
+    2.  **Match Metadata:** Aligns columns with the `COLUMN_METADATA` dictionary.
+    3.  **Data Profiling (Dynamic):** For categorical columns (VARCHAR), it executes
+        a `GROUP BY` query to fetch the top 5 most frequent values. This allows the
+        Agent to see actual examples (e.g., seeing 'Covid-19' vs 'SARS-CoV-2').
+    4.  **Formatting:** Compiles everything into a Markdown list string.
+
+    Returns:
+        str: A formatted string describing columns, types, descriptions, and sample values.
+             Returns an error message string if the schema cannot be read.
+    """
     con = get_db_connection()
     try:
         try:
