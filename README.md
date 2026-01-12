@@ -38,7 +38,7 @@ We implemented a full observability layer using **MLflow** backed by **PostgreSQ
 
 We adhere to a "Security First" approach, implementing a **Defense-in-Depth** strategy that addresses data privacy across both storage and interaction layers, supported by **PydanticAI-Guardrails** for interaction-level enforcement:
 
-* **Data Minimization (Preprocessing):** Before any data enters the analytical environment, we perform a strict selection of pertinent columns from the raw CSV. Sensitive Personal Identifiable Information (PII) such as Names and CPFs were explicitly discarded during the ETL process to DuckDB, as they are not necessary for the required aggregated metrics (mortality, occupation, vaccination rates).
+* **Data Minimization (Preprocessing):** Before any data enters the analytical environment, we perform a strict selection of pertinent columns from the raw CSV. Sensitive Personal Identifiable Information (PII) such as Names and CPFs were explicitly discarded during the ETL process to DuckDB, as they are not necessary for the required aggregated metrics (mortality, occupation, vaccination rates and growth cases rate).
 * **Input Guardrails:** We utilize Guardrails as an active interception layer. It scans user prompts for potential PII, prompt injection or any malicious intent before the LLM processes them.
 * **System Prompt Instruction:** As a secondary safety net, the System Prompt is rigorously instructed to reject any request that attempts to solicit sensitive information, ensuring compliance even if a guardrail is bypassed.
 * **Output/Execution Guardrails:** A custom validator intercepts tool execution, specifically for the SQL tool (`stats_tool`). It ensures the agent cannot execute destructive commands (`DROP`, `DELETE`) or access restricted schemas within the Data Warehouse.
@@ -68,6 +68,7 @@ The stack was chosen to reflect modern Python engineering standards, prioritizin
 | **Containerization** | **Docker** | Ensures full environment reproducibility and simplifies the orchestration of the multi-service architecture (API, MLflow, MinIO). |
 | **Web Search** | **Tavily** | Optimized search API for LLMs to retrieve real-time news context. |
 | **Frontend** | **Streamlit** | Rapid prototyping UI to demonstrate the agent's capabilities. |
+| **Documentation** | **Mkdocs** | Treats documentation as code. Generates a static site from Markdown, ensuring technical docs live alongside the codebase. |
 | **Package Manager** | **UV** | Chosen over Poetry/Pip for its superior resolution speed and unified project management. |
 | **Code Quality** | **Ruff + Pre-commit** | Strict linting and formatting via pre-commit hooks to ensure PEP-8 compliance and Clean Code before every push. |
 ---
@@ -102,6 +103,23 @@ The project follows a Monorepo-style structure:
 ---
 
 ## System Workflow & Engineering
+
+The diagram below illustrates the end-to-end operational workflow, detailing the lifecycle of a report generation request:
+
+![Agent Workflow Architecture](./assets/workflow.png)
+
+> Note: The Workflow Diagram is located on `assets/workflow.pdf`
+
+### Operational Flow Overview
+
+As visualized above, the architecture operates in four distinct stages:
+
+1.  **Request Ingestion:** The User submits a request via the **FastAPI** entry point. The input passes through initial **Guardrails** (PII/Injection checks) before reaching the core logic.
+2.  **The ReAct Loop (Orchestrator):** The **PydanticAI** agent initializes its reasoning loop. It analyzes the user's intent and autonomously decides which tools to invoke based on the System Prompt instructions.
+3.  **Tool Interaction & Feedback:** The agent executes specific capabilities, querying **DuckDB** for metrics, generating plots via **Matplotlib**, or fetching news via **Tavily**. Crucially, the outputs of these tools are fed back into the agent's context, allowing it to "see" the results and refine its final answer.
+4.  **Asynchronous Telemetry:** Parallel to the main thread, the **Observability Layer** captures every step. Traces, intermediate thoughts, and generated artifacts (images/markdown) are pushed to **PostgreSQL** and **MinIO**, ensuring full auditability.
+
+---
 
 The transition from a raw dataset to a production-grade Agent was driven by a methodical **Research-to-Production** lifecycle.
 
@@ -170,7 +188,7 @@ The Agent interacts with the world through three specialized tools, each adherin
 
 #### B. Visualization Engine (`api/src/tools/plot.py`)
 * **Name:** `plot_tool`
-* **Function:** Generates `matplotlib`/`seaborn` charts (Line or Bar plots) based on the data context.
+* **Function:** Generates `matplotlib`/`seaborn` charts (Line or Bar plots) based on the data context. It is strictly configured to produce daily case trends for the last 30 days and monthly aggregates for the last 12 months.
 * **The "Blind Agent" Problem:** Since the LLM cannot "see" the image it generates, this tool implements a **Dual-Return Strategy**:
     1.  **Artifact Persistence:** It saves the high-resolution PNG to the shared volume (`data/plots/`).
     2.  **Cognitive & Structural Feedback:** It returns a text payload containing a **Statistical Summary** (so the agent can reason about the data) and the **Exact Filename**.
@@ -247,3 +265,63 @@ To demonstrate the API's capabilities, a frontend was implemented using **Stream
 ---
 
 ## Setup & Installation
+
+This project is fully containerized to ensure consistency across environments. The only dependencies required on your host machine are **Docker** and **Docker Compose**.
+
+> **Note:** This setup is optimized for a **Linux environment**. Windows users are recommended to use WSL2.
+
+### 1. Configuration
+
+Start by setting up the environment variables. Copy the example file to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Open the `.env` file and populate the variables.
+* **External APIs:** You must provide valid keys for OpenAI (LLM) and Tavily (Search).
+* **Infrastructure:** The default values for Postgres, MinIO, and MLflow are pre-configured for the local Docker network and do not need changes for a local run.
+
+```ini
+OPENAI_API_KEY=                 # Required: Your OpenAI Key
+TAVILY_API_KEY=                 # Required: Your Tavily Search Key
+
+POSTGRES_USER=user_srag
+POSTGRES_PASSWORD=password_srag
+POSTGRES_DB=mlflow_db
+
+MINIO_ROOT_USER=minio_admin
+MINIO_ROOT_PASSWORD=minio_password
+MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+MLFLOW_BUCKET_NAME=srag-artifacts
+
+MLFLOW_TRACKING_URI=http://mlflow:5000
+```
+
+### 2. Build & Run
+
+Initialize the application stack. This command will build the images, start the services, and trigger the initial ETL process to download and ingest the SRAG dataset.
+
+```bash
+docker compose up --build
+```
+
+> **First Run Notice:** The initial ingestion of the dataset from DATASUS might take a few minutes depending on your internet connection. Watch the logs for `Ingestion completed successfully`.
+
+To stop the services and remove containers:
+
+```bash
+docker compose down
+```
+
+### 3. Service Access Points
+
+Once the stack is up and running, you can access the various components via the following local endpoints:
+
+| Component | Service | URL | Description |
+| :--- | :--- | :--- | :--- |
+| **Frontend** | Streamlit | [http://localhost:8501](http://localhost:8501) | **Main Entrypoint.** The interactive dashboard for users. |
+| **Backend** | FastAPI | [http://localhost:8220/api/v1/docs](http://localhost:8220/api/v1/docs) | OpenAPI (Swagger) documentation and API testing. |
+| **Observability** | MLflow UI | [http://localhost:5000](http://localhost:5000) | Track traces, agent runs, and download generated artifacts. |
+| **Storage** | MinIO Console | [http://localhost:9001](http://localhost:9001) | Object storage browser (Login: `minio_admin` / `minio_password`). |
+| **Documentation** | Mkdocs | [http://localhost:800](http://localhost:8000) | Mkdocs UI for code documentation. |
