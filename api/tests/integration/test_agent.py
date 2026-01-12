@@ -15,6 +15,18 @@ from api.src.agents.deps import AgentDeps
 
 
 class FixedResponseModel(Model):
+    """
+    A Mock LLM Implementation for deterministic testing.
+
+    Instead of calling OpenAI, this class returns pre-defined `response_parts`.
+    This allows us to simulate specific LLM behaviors (e.g., calling a tool,
+    generating text, or even hallucinating a malicious command) to test how
+    the Agent loop responds.
+
+    Attributes:
+        response_parts (list[Any]): The content the "LLM" should return in the first turn.
+    """
+
     def __init__(self, response_parts: list[Any]):
         self.response_parts = response_parts
         self._call_count = 0
@@ -42,6 +54,11 @@ class FixedResponseModel(Model):
 
 @pytest.fixture
 def mock_deps():
+    """
+    Creates mocked Agent Dependencies (Database).
+
+    Simulates a DuckDB connection to avoid needing a real database file on disk.
+    """
     deps = MagicMock(spec=AgentDeps)
     deps.db_path = ":memory:"
 
@@ -66,6 +83,20 @@ def client():
 
 @pytest.mark.asyncio
 async def test_agent_sql_guardrail_interception(orchestrator, mock_deps):
+    """
+    Integration Test: Ensures the Guardrail actively stops a compromised Agent.
+
+    This test forces the Mock LLM to emit a malicious `DROP TABLE` tool call.
+    We assert that `pydantic-ai-guardrails` intercepts this *before* it reaches
+    the tool execution layer.
+
+    **Flow:**
+
+    1.  Setup `FixedResponseModel` to return a `DROP` SQL query.
+    2.  Run Agent.
+    3.  **Assert:** An `OutputGuardrailViolation` exception is raised.
+
+    """
     malicious_response = [
         ToolCallPart(
             tool_name="stats_tool",
@@ -87,6 +118,12 @@ async def test_agent_sql_guardrail_interception(orchestrator, mock_deps):
 
 @pytest.mark.asyncio
 async def test_agent_tool_routing_success(orchestrator, mock_deps):
+    """
+    Integration Test: Verifies successful tool routing for valid queries.
+
+    Ensures that when the LLM emits a valid `SELECT` call, the arguments are
+    passed correctly to the underlying database connection.
+    """
     valid_response = [
         ToolCallPart(
             tool_name="stats_tool",
@@ -107,6 +144,19 @@ async def test_agent_tool_routing_success(orchestrator, mock_deps):
 
 
 def test_full_report_flow_integration(client):
+    """
+    End-to-End API Test: Checks the `/report` endpoint wiring.
+
+    This test mocks the internal `orchestrator.run()` method to isolate the
+    FastAPI layer from the AI logic. It verifies that inputs (focus_area)
+    are passed down and outputs (markdown) are returned up correctly.
+
+    **Checks:**
+
+    1.  Status Code 200.
+    2.  JSON response structure matches `AgentResponse`.
+    3.  Prompt injection logic (Focus Area appending) works as expected.
+    """
     mock_orchestrator = MagicMock()
 
     mock_result = MagicMock()
