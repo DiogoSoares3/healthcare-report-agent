@@ -8,29 +8,21 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    container:
+      image: squidfunk/mkdocs-material:latest
+      options: --entrypoint /bin/sh
+
     steps:
       - uses: actions/checkout@v4
 
-      - name: Configure Git Credentials
+      - name: Configure Git & Install Dependencies
         run: |
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git config --global user.name github-actions[bot]
+          git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
+          git config --global --add safe.directory "*"
 
-      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV
-
-      - uses: actions/cache@v4
-        with:
-          key: mkdocs-material-${{ env.cache_id }}
-          path: .cache
-          restore-keys: |
-            mkdocs-material-
-
-      - name: Install dependencies
-        run: pip install -U pip && pip install mkdocstrings[python] mkdocs-material
+          pip install --no-cache-dir mkdocstrings[python]
 
       - name: Deploy documentation
         run: mkdocs gh-deploy --force
