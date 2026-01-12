@@ -33,7 +33,7 @@ plugins:
 - mkdocstrings:
     handlers:
       python:
-        paths: [api,api/src]
+        paths: [api,api/src,api/tests]
         load_external_modules: true
         options:
           show_source: true
