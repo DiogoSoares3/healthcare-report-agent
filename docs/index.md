@@ -1,4 +1,5 @@
 # SRAG Insight Agent: Automated Healthcare Reporting Engine
+![CI Status](https://github.com/DiogoSoares3/healthcare-report-agent/actions/workflows/ci.yml/badge.svg)
 
 > **Proof of Concept for Indicium HealthCare Inc.**
 
@@ -8,7 +9,7 @@ This repository contains a Generative AI solution designed to generate real-time
 
 Developed as a Proof of Concept (PoC) to evaluate the feasibility of automated epidemiological monitoring, this solution establish a **Agentic Architecture**. The system orchestrates a Large Language Model (LLM) to autonomously query high-volume healthcare datasets (Open DATASUS), visualize trends, and contextualize findings with real-time news retrieval.
 
-The core philosophy of this implementation is **"Pragmatic Engineering"**: balancing the cutting-edge capabilities of Agentic AI with the reliability, type safety, and observability required for enterprise software.
+The core philosophy of this implementation is *Pragmatic Engineering*: balancing the cutting-edge capabilities of Agentic AI with the reliability, type safety, and observability required for enterprise software.
 
 ---
 
@@ -263,6 +264,22 @@ To demonstrate the API's capabilities, a frontend was implemented using **Stream
 * **Function:** It sends requests to the FastAPI endpoints and renders the returned Markdown response. Crucially, it handles the dynamic resolution of image paths, displaying the locally generated plots served by the API's static file mount alongside the textual analysis, providing a seamless "Report View" experience for the end-user.
 
 ![](./assets/streamlit_.gif)
+
+---
+
+### 9. Continuous Documentation
+
+A "Docs-as-Code" philosophy is followed. The project documentation is built with MkDocs Material, ensuring that architectural decisions and API references are versioned alongside the source code.
+
+**Deployment Strategy:**
+The project implements a hybrid deployment pipeline to ensure flexibility:
+
+* **CI/CD (Automated):** A GitHub Actions workflow (`ci.yml`) automatically builds the documentation using the official Docker image and deploys it to GitHub Pages upon every push to `main`. This ensures the live documentation is never out of sync with the codebase.
+* **Local (Manual):** For rapid adjustments, the documentation service runs locally via Docker Compose, exposing a hot-reloading server on port 8000 that mirrors the production build.
+
+![](./assets/mkdocs_deploy_.gif)
+
+> The live documentation is available at: **[https://diogosoares3.github.io/healthcare-report-agent/](https://diogosoares3.github.io/healthcare-report-agent/)**
 
 ---
 
