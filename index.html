@@ -1,0 +1,2360 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://diogosoares3.github.io/healthcare-report-agent/index.html">
+      
+      
+      
+        <link rel="next" href="api/main.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Automated Healthcare Reporting</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#srag-insight-agent-automated-healthcare-reporting-engine" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="index.html" title="Automated Healthcare Reporting" class="md-header__button md-logo" aria-label="Automated Healthcare Reporting" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Automated Healthcare Reporting
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SRAG Insight Agent: Automated Healthcare Reporting Engine
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  SRAG Insight Agent: Automated Healthcare Reporting Engine
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="api/main.html" class="md-tabs__link">
+          
+  
+  
+  Api
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="index.html" title="Automated Healthcare Reporting" class="md-nav__button md-logo" aria-label="Automated Healthcare Reporting" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Automated Healthcare Reporting
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRAG Insight Agent: Automated Healthcare Reporting Engine
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="index.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRAG Insight Agent: Automated Healthcare Reporting Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-strategy-decision-making" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architectural Strategy &amp; Decision Making
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architectural Strategy &amp; Decision Making">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-the-reasoning-engine-react-chain-of-thought" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Reasoning Engine: ReAct + Chain-of-Thought
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-governance-transparency-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Governance &amp; Transparency (Observability)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-safety-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Safety &amp; Guardrails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-tooling-strategy-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Tooling Strategy &amp; Capabilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tech-stack-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tech Stack &amp; Tools
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-workflow-engineering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Workflow &amp; Engineering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Workflow &amp; Engineering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#operational-flow-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operational Flow Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-data-pipeline-etl-ingestion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Data Pipeline (ETL &amp; Ingestion)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-the-orchestrator-agentic-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Orchestrator (Agentic Core)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Orchestrator (Agentic Core)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-prompt-engineering-cognitive-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Prompt Engineering (Cognitive Architecture)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-dependency-injection-inversion-of-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Dependency Injection &amp; Inversion of Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-tooling-capabilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Tooling &amp; Capabilities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Tooling &amp; Capabilities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-analytical-engine-apisrctoolsstatspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. Analytical Engine (api/src/tools/stats.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-visualization-engine-apisrctoolsplotpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. Visualization Engine (api/src/tools/plot.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-context-retrieval-apisrctoolsseachpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. Context Retrieval (api/src/tools/seach.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-guardrails-safety-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Guardrails (Safety Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-api-architecture-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. API Architecture &amp; Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-testing-quality-assurance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Testing &amp; Quality Assurance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-observability-governance-mlflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Observability &amp; Governance (MLflow)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-user-interface-client-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. User Interface (Client Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-continuous-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Continuous Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup &amp; Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup &amp; Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-build-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Build &amp; Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-service-access-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Service Access Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Api
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Api
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/main.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Main
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Src
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Src
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/config.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/schemas.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agents
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Agents
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/agents/deps.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/agents/orchestrator.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/agents/prompts.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_4" id="__nav_2_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Db
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Db
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/db/duckdb_connection.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Duckdb connection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/db/minio_connection.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Minio connection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_5" id="__nav_2_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Middleware
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Middleware
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/middleware/observability.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_6" id="__nav_2_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Routers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Routers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/routers/agent.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_7" id="__nav_2_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Services
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Services
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/services/ingest.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ingest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/services/manage_plots.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage plots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/services/telemetry.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telemetry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_8" id="__nav_2_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tools
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/tools/plot.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Plot
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/tools/schemas.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schemas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/tools/search.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/src/tools/stats.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stats
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tests
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tests
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/tests/conftest.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Conftest
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/tests/integration/test_agent.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_3" id="__nav_2_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unit
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unit
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api/tests/unit/test_security.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Test security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="srag-insight-agent-automated-healthcare-reporting-engine">SRAG Insight Agent: Automated Healthcare Reporting Engine</h1>
+<p><img alt="CI Status" src="https://github.com/DiogoSoares3/healthcare-report-agent/actions/workflows/ci.yml/badge.svg" />
+<a href="https://www.python.org/"><img alt="Python" src="https://img.shields.io/badge/python-3.12%2B-blue.svg?logo=python&amp;logoColor=white" /></a>
+<a href="https://ai.pydantic.dev/"><img alt="PydanticAI" src="https://img.shields.io/badge/PydanticAI-Agent-e92063.svg?logo=pydantic&amp;logoColor=white" /></a>
+<a href="https://github.com/astral-sh/ruff"><img alt="Code style: ruff" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" /></a>
+<a href="https://github.com/astral-sh/uv"><img alt="uv" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" /></a>
+<a href="https://fastapi.tiangolo.com"><img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-005571?style=flat&amp;logo=fastapi" /></a>
+<a href="https://www.docker.com/"><img alt="Docker" src="https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&amp;logo=docker&amp;logoColor=white" /></a>
+<a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a></p>
+<blockquote>
+<p><strong>Proof of Concept for Indicium HealthCare Inc.</strong></p>
+</blockquote>
+<h2 id="executive-summary">Executive Summary</h2>
+<p>This repository contains a Generative AI solution designed to generate real-time, data-driven reports on Severe Acute Respiratory Syndrome (SRAG).</p>
+<p>Developed as a Proof of Concept (PoC) to evaluate the feasibility of automated epidemiological monitoring, this solution establish a <strong>Agentic Architecture</strong>. The system orchestrates a Large Language Model (LLM) to autonomously query high-volume healthcare datasets (Open DATASUS), visualize trends, and contextualize findings with real-time news retrieval.</p>
+<p>The core philosophy of this implementation is <em>Pragmatic Engineering</em>: balancing the cutting-edge capabilities of Agentic AI with the reliability, type safety, and observability required for enterprise software.</p>
+<hr />
+<h2 id="architectural-strategy-decision-making">Architectural Strategy &amp; Decision Making</h2>
+<p>To ensure the solution is scalable, auditable, and maintainable, the following architectural decisions were prioritized to meet the evaluation criteria:</p>
+<h3 id="1-the-reasoning-engine-react-chain-of-thought">1. The Reasoning Engine: ReAct + Chain-of-Thought</h3>
+<p><strong>Criteria:</strong> <em>Architecture selection</em></p>
+<p>Instead of a complex Multi-Agent System (which often introduces unnecessary latency and orchestration overhead for this scope) or a rigid linear chain (which lacks flexibility), a <strong>ReAct (Reason + Act) Agent</strong> was implemented using <strong>PydanticAI</strong>.</p>
+<ul>
+<li><strong>Why:</strong> The problem requires the AI to iteratively "think" about the data it finds, decide if it needs more granularity, and then act.</li>
+<li><strong>Implementation:</strong> We inject Chain-of-Thought reasoning directly into the system prompt. This allows the agent to reason about tool outputs, SQL query results, chart generation, and news articles, before synthesizing the final report.</li>
+</ul>
+<h3 id="2-governance-transparency-observability">2. Governance &amp; Transparency (Observability)</h3>
+<p><strong>Criteria:</strong> <em>Governance and Transparency</em></p>
+<p>We implemented a full observability layer using <strong>MLflow</strong> backed by <strong>PostgreSQL</strong> and <strong>MinIO</strong>.</p>
+<ul>
+<li><strong>Traceability:</strong> Every step of the agent's thought process, every tool call (SQL executed, search terms used), and the final output is logged.</li>
+<li><strong>Artifact Management:</strong> Generated charts and markdown reports are versioned in MinIO (S3 compatible), while metadata is stored in Postgres (OLTP), ensuring full auditability of the "decisions" made by the agent.</li>
+</ul>
+<h3 id="3-safety-guardrails">3. Safety &amp; Guardrails</h3>
+<p><strong>Criteria:</strong> <em>Guardrails</em> and <em>Sensitive Data Handling</em></p>
+<p>We adhere to a "Security First" approach, implementing a <strong>Defense-in-Depth</strong> strategy that addresses data privacy across both storage and interaction layers, supported by <strong>PydanticAI-Guardrails</strong> for interaction-level enforcement:</p>
+<ul>
+<li><strong>Data Minimization (Preprocessing):</strong> Before any data enters the analytical environment, we perform a strict selection of pertinent columns from the raw CSV. Sensitive Personal Identifiable Information (PII) such as Names and CPFs were explicitly discarded during the ETL process to DuckDB, as they are not necessary for the required aggregated metrics (mortality, occupation, vaccination rates and growth cases rate).</li>
+<li><strong>Input Guardrails:</strong> We utilize Guardrails as an active interception layer. It scans user prompts for potential PII, prompt injection or any malicious intent before the LLM processes them.</li>
+<li><strong>System Prompt Instruction:</strong> As a secondary safety net, the System Prompt is rigorously instructed to reject any request that attempts to solicit sensitive information, ensuring compliance even if a guardrail is bypassed.</li>
+<li><strong>Output/Execution Guardrails:</strong> A custom validator intercepts tool execution, specifically for the SQL tool (<code>stats_tool</code>). It ensures the agent cannot execute destructive commands (<code>DROP</code>, <code>DELETE</code>) or access restricted schemas within the Data Warehouse.</li>
+</ul>
+<h3 id="4-tooling-strategy-capabilities">4. Tooling Strategy &amp; Capabilities</h3>
+<p><strong>Criteria:</strong> <em>Use of Tools</em></p>
+<p>The agent interacts with the environment through three strictly typed tools, designed to adhere to the <strong>Separation of Concerns</strong> principle. Each tool empowers the agent with a specific capability needed to fulfill the reporting requirements:</p>
+<ul>
+<li><strong>Analytical Engine (<code>stats_tool</code>):</strong> To handle the ~323k rows efficiently, we backed this tool with <strong>DuckDB</strong> (OLAP). This allows the agent to execute high-performance aggregation queries (SQL) to extract metrics (mortality, occupation, vaccination) in milliseconds, rather than struggling with slow Python-based data frame manipulation.</li>
+<li><strong>Visualization Engine (<code>plot_tool</code>):</strong> A dedicated interface for generating trend charts (line/bar plots).</li>
+<li><strong>Context Retrieval (<code>tavily_search</code>):</strong> To provide the real-time context required by the challenge, this tool connects to the Tavily API, allowing the agent to fetch external news about SRAG to ground its analysis in the current scenario.</li>
+</ul>
+<hr />
+<h2 id="tech-stack-tools">Tech Stack &amp; Tools</h2>
+<p>The stack was chosen to reflect modern Python engineering standards, prioritizing strong typing and reproducibility.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Technology</th>
+<th style="text-align: left;">Reasoning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Orchestrator</strong></td>
+<td style="text-align: left;"><strong>PydanticAI</strong></td>
+<td style="text-align: left;">Provides a production-grade framework with Dependency Injection, strong type validation, and robust structured outputs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>API</strong></td>
+<td style="text-align: left;"><strong>FastAPI</strong></td>
+<td style="text-align: left;">High-performance, async-native REST API. Integrates natively with Pydantic for request/response validation.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Data Warehouse</strong></td>
+<td style="text-align: left;"><strong>DuckDB</strong></td>
+<td style="text-align: left;">In-process OLAP database optimized for analytical queries on the CSV dataset.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Observability</strong></td>
+<td style="text-align: left;"><strong>MLflow</strong></td>
+<td style="text-align: left;">Tracks agent runs, prompts, and tool usage metrics.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Storage</strong></td>
+<td style="text-align: left;"><strong>MinIO + Postgres</strong></td>
+<td style="text-align: left;">MinIO handles unstructured artifacts (plots/reports); Postgres act as a OLTP to handle structured telemetry/logs.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Containerization</strong></td>
+<td style="text-align: left;"><strong>Docker</strong></td>
+<td style="text-align: left;">Ensures full environment reproducibility and simplifies the orchestration of the multi-service architecture (API, MLflow, MinIO).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Web Search</strong></td>
+<td style="text-align: left;"><strong>Tavily</strong></td>
+<td style="text-align: left;">Optimized search API for LLMs to retrieve real-time news context.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Frontend</strong></td>
+<td style="text-align: left;"><strong>Streamlit</strong></td>
+<td style="text-align: left;">Rapid prototyping UI to demonstrate the agent's capabilities.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Documentation</strong></td>
+<td style="text-align: left;"><strong>Mkdocs</strong></td>
+<td style="text-align: left;">Treats documentation as code. Generates a static site from Markdown, ensuring technical docs live alongside the codebase.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Package Manager</strong></td>
+<td style="text-align: left;"><strong>UV</strong></td>
+<td style="text-align: left;">Chosen over Poetry/Pip for its superior resolution speed and unified project management.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Code Quality</strong></td>
+<td style="text-align: left;"><strong>Ruff + Pre-commit</strong></td>
+<td style="text-align: left;">Strict linting and formatting via pre-commit hooks to ensure PEP-8 compliance and Clean Code before every push.</td>
+</tr>
+<tr>
+<td style="text-align: left;">---</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<h2 id="repository-structure">Repository Structure</h2>
+<p>The project follows a Monorepo-style structure:</p>
+<pre><code class="language-text">.
+├── api
+│   ├── main.py                     # FastAPI entrypoint &amp; App Lifecycle
+│   ├── src
+│   │   ├── agents
+│   │   │   ├── deps.py             # Dependency Injection definitions
+│   │   │   ├── orchestrator.py     # Core ReAct Agent logic
+│   │   │   └── prompts.py          # System prompts &amp; Dynamic instructions
+│   │   ├── config.py               # Environment variables &amp; Settings
+│   │   ├── db
+│   │   │   ├── duckdb_connection.py # OLAP Database manager
+│   │   │   └── minio_connection.py  # Object Storage manager
+│   │   ├── middleware
+│   │   │   └── observability.py    # MLflow tracking middleware
+│   │   ├── routers
+│   │   │   └── agent.py            # API Routes (e.g., POST /report)
+│   │   ├── schemas.py              # Shared Pydantic models
+│   │   ├── services
+│   │   │   ├── ingest.py           # ETL Pipeline (CSV -&gt; DuckDB)
+│   │   │   ├── manage_plots.py     # Artifact handling logic
+│   │   │   └── telemetry.py        # Tracing implementation
+│   │   └── tools
+│   │       ├── plot.py             # Graph generation
+│   │       ├── search.py           # Tavily Web Search wrapper
+│   │       └── stats.py            # SQL Generation &amp; Validation
+│   └── tests                       # Pytest Suite
+│       ├── integration             # End-to-end agent tests
+│       └── unit                    # Security &amp; Logic unit tests
+├── assets                          # Architecture diagram &amp; Demo GIFs
+├── data
+│   ├── plots                       # Local storage for generated charts
+│   ├── processed                   # DuckDB database file (.db)
+│   └── raw                         # Raw CSV input
+├── docs                            # MkDocs documentation source
+├── frontend
+│   └── app.py                      # Streamlit User Interface
+├── notebooks                       # Jupyter Notebooks (EDA &amp; Prototyping)
+├── docker-compose.yml              # Service orchestration
+├── Dockerfile                      # Application containerization
+├── mkdocs.yml                      # Documentation configuration
+├── pyproject.toml                  # Dependencies &amp; Tool settings for UV
+└── uv.lock                         # UV dependency lockfile
+</code></pre>
+<hr />
+<h2 id="system-workflow-engineering">System Workflow &amp; Engineering</h2>
+<p>The diagram below illustrates the end-to-end operational workflow, detailing the lifecycle of a report generation request:</p>
+<p><img alt="Agent Workflow Architecture" src="./assets/workflow.png" /></p>
+<blockquote>
+<p>Note: The Workflow Diagram is located on <code>assets/workflow.pdf</code></p>
+</blockquote>
+<h3 id="operational-flow-overview">Operational Flow Overview</h3>
+<p>As visualized above, the architecture operates in four distinct stages:</p>
+<ol>
+<li><strong>Request Ingestion:</strong> The User submits a request via the <strong>FastAPI</strong> entry point. The input passes through initial <strong>Guardrails</strong> (PII/Injection checks) before reaching the core logic.</li>
+<li><strong>The ReAct Loop (Orchestrator):</strong> The <strong>PydanticAI</strong> agent initializes its reasoning loop. It analyzes the user's intent and autonomously decides which tools to invoke based on the System Prompt instructions.</li>
+<li><strong>Tool Interaction &amp; Feedback:</strong> The agent executes specific capabilities, querying <strong>DuckDB</strong> for metrics, generating plots via <strong>Matplotlib</strong>, or fetching news via <strong>Tavily</strong>. Crucially, the outputs of these tools are fed back into the agent's context, allowing it to "see" the results and refine its final answer.</li>
+<li><strong>Asynchronous Telemetry:</strong> Parallel to the main thread, the <strong>Observability Layer</strong> captures every step. Traces, intermediate thoughts, and generated artifacts (images/markdown) are pushed to <strong>PostgreSQL</strong> and <strong>MinIO</strong>, ensuring full auditability.</li>
+</ol>
+<hr />
+<p>The transition from a raw dataset to a production-grade Agent was driven by a methodical <strong>Research-to-Production</strong> lifecycle.</p>
+<p>Before implementing the API, some experiments were conducted:
+1.  <strong><code>notebooks/1.0-eda.ipynb</code></strong>: Exploratory Data Analysis to understand the schema, identify missing values, and define the business logic for metrics (Mortality, ICU, Vaccination, growth cases rate and others).
+2.  <strong><code>notebooks/2.0-agent-prototyping.ipynb</code></strong>: A "lab environment" where we tested prompt engineering strategies, guardrails and tool definitions against the DuckDB instance to validate response quality before deployment.</p>
+<hr />
+<h3 id="1-data-pipeline-etl-ingestion">1. Data Pipeline (ETL &amp; Ingestion)</h3>
+<p><strong>File:</strong> <code>api/src/services/ingest.py</code></p>
+<p>The system relies on a local Data Lakehouse architecture. On startup, the application ensures data integrity through a strictly typed ETL pipeline:</p>
+<ol>
+<li><strong>Ingest:</strong> Downloads the official SRAG CSV (~323k rows) from the Open DATASUS S3 bucket.</li>
+<li><strong>Transform (Label Encoding):</strong><ul>
+<li>Raw numeric codes (e.g., <code>EVOLUCAO=1</code>) are mapped to semantic labels (<code>outcome_lbl='Cure'</code>).</li>
+<li><em>Why?</em> LLMs struggle to memorize arbitrary numeric codes. By converting data to semantic strings during ETL, we significantly reduce hallucination rates in SQL generation.</li>
+</ul>
+</li>
+<li><strong>Load (DuckDB):</strong> The processed dataframe is persisted into a local DuckDB file (<code>srag_analytics.db</code>). This file serves as the read-optimized source for the Agent.</li>
+</ol>
+<hr />
+<h3 id="2-the-orchestrator-agentic-core">2. The Orchestrator (Agentic Core)</h3>
+<p><strong>File:</strong> <code>api/src/agents/orchestrator.py</code></p>
+<p>The <code>SRAGAgentOrchestrator</code> serves as the center of the application, responsible for binding the LLM (Reasoning), Tools (Capabilities), and Data (Context) into a coherent lifecycle.</p>
+<h4 id="a-prompt-engineering-cognitive-architecture">A. Prompt Engineering (Cognitive Architecture)</h4>
+<p><strong>File:</strong> <code>api/src/agents/prompts.py</code></p>
+<p>We build a <strong>system prompt</strong> at runtime that serves as a structured guidance layer for the model. This prompt injects domain knowledge before the agent begins its reasoning process:</p>
+<ul>
+<li><strong>Dynamic Schema Injection:</strong> The prompt receives a live string representation of the DuckDB schema (columns, types, description and <em>sample values</em>). This drastically reduces SQL generation errors by ensuring the LLM knows exactly what the data looks like.</li>
+<li><strong>Business Logic Encoding:</strong> We explicitly define the SQL formulas for KPIs (e.g., <em>"Mortality Rate = Deaths / (Deaths + Cures)"</em>) directly in the prompt. This prevents the LLM from hallucinating incorrect mathematical definitions for health metrics.</li>
+<li><strong>Strategic Execution Plan:</strong> The prompt enforces a Chain-of-Thought methodology:<ol>
+<li><em>Explore</em> (Query DB)</li>
+<li><em>Analyse</em> (Understand results)</li>
+<li><em>Search</em> (Find external news context)</li>
+<li><em>Synthesize</em> (Report).</li>
+</ol>
+</li>
+<li><strong>Technical Constraints:</strong> It includes strict SQL generation rules, such as enforcing <code>NULLIF</code> for division-by-zero protection, etc.</li>
+</ul>
+<h4 id="b-dependency-injection-inversion-of-control">B. Dependency Injection &amp; Inversion of Control</h4>
+<p><strong>Files:</strong> <code>api/src/agents/deps.py</code> &amp; <code>api/src/routers/agent.py</code></p>
+<p>The architecture relies heavily on <strong>Dependency Injection (DI)</strong> to ensure architectural robustness. We implement DI at two distinct levels:</p>
+<ol>
+<li>
+<p><strong>Application Level (FastAPI):</strong>
+    The <code>SRAGAgentOrchestrator</code> is injected into API routes using FastAPI's <code>Depends</code> system. This allows the API to remain agnostic of how the agent is constructed, permitting easy swapping of configuration settings or LLM backends without touching the router logic.</p>
+</li>
+<li>
+<p><strong>Runtime Level (PydanticAI):</strong>
+    We utilize typed <code>AgentDeps</code> to inject runtime resources into the Agent's tools via the execution context (<code>ctx.deps</code>), avoiding global state.</p>
+</li>
+</ol>
+<p><strong>Architectural Benefits:</strong>
+- <strong>Testability</strong>: Dependencies can be trivially replaced with mocks or in-memory implementations during testing, enabling high coverage without side effects.
+- <strong>Decoupling</strong>: Components remain stateless and agnostic of their execution environment, increasing modularity and maintainability.</p>
+<hr />
+<h3 id="3-tooling-capabilities">3. Tooling &amp; Capabilities</h3>
+<p>The Agent interacts with the world through three specialized tools, each adhering to the <strong>Single Responsibility Principle</strong>:</p>
+<h4 id="a-analytical-engine-apisrctoolsstatspy">A. Analytical Engine (<code>api/src/tools/stats.py</code>)</h4>
+<ul>
+<li><strong>Name:</strong> <code>stats_tool</code></li>
+<li><strong>Function:</strong> Executes SQL queries generated by the LLM.</li>
+<li><strong>Safety Mechanism:</strong> It includes a custom <strong>SQL Validator</strong> (<code>validate_sql_safety</code>) that parses the query string and strictly blocks destructive commands (<code>DROP</code>, <code>DELETE</code>, <code>UPDATE</code>) before they reach the database engine.</li>
+</ul>
+<h4 id="b-visualization-engine-apisrctoolsplotpy">B. Visualization Engine (<code>api/src/tools/plot.py</code>)</h4>
+<ul>
+<li><strong>Name:</strong> <code>plot_tool</code></li>
+<li><strong>Function:</strong> Generates <code>matplotlib</code>/<code>seaborn</code> charts (Line or Bar plots) based on the data context. It is strictly configured to produce case trends for the last 30 days and monthly aggregates for the last 12 months.</li>
+<li><strong>The "Blind Agent" Problem:</strong> Since the LLM cannot "see" the image it generates, this tool implements a <strong>Dual-Return Strategy</strong>:<ol>
+<li><strong>Artifact Persistence:</strong> It saves the high-resolution PNG to the shared volume (<code>data/plots/</code>).</li>
+<li><strong>Cognitive &amp; Structural Feedback:</strong> It returns a text payload containing a <strong>Statistical Summary</strong> (so the agent can reason about the data) and the <strong>Exact Filename</strong>.<ul>
+<li><strong>Path Resolution:</strong> The filename return allows the Agent to autonomously embed the image into the final Markdown report using the correct static asset path (<code>/api/v1/plots/&lt;filename&gt;</code>). This guarantees that the frontend renders the image correctly.</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h4 id="c-context-retrieval-apisrctoolsseachpy">C. Context Retrieval (<code>api/src/tools/seach.py</code>)</h4>
+<ul>
+<li><strong>Name:</strong> <code>tavily_search</code></li>
+<li><strong>Function:</strong> Wraps the <strong>Tavily API</strong> to fetch real-time news.</li>
+<li><strong>Strategy:</strong> The system prompt instructs the agent to use this tool to ground and support business metrics.</li>
+</ul>
+<hr />
+<h3 id="4-guardrails-safety-layer">4. Guardrails (Safety Layer)</h3>
+<p><strong>Library:</strong> <code>pydantic-ai-guardrails</code></p>
+<p>We implement a <strong>Defense-in-Depth</strong> strategy wrapping the Agent:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Guardrail</th>
+<th style="text-align: left;">Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Input</strong></td>
+<td style="text-align: left;"><code>pii_detector</code></td>
+<td style="text-align: left;">Scans user prompt for Personally Identifiable Information. If detected, the request is blocked before reaching the LLM.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Input</strong></td>
+<td style="text-align: left;"><code>prompt_injection</code></td>
+<td style="text-align: left;">Detects attempts to jailbreak the system instructions.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Input</strong></td>
+<td style="text-align: left;"><code>toxicity_detector</code></td>
+<td style="text-align: left;">Ensures incoming queries maintain a professional tone suitable for a healthcare environment</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Output</strong></td>
+<td style="text-align: left;"><code>validate_tool_parameters</code></td>
+<td style="text-align: left;">Validates that arguments passed to tools match the Pydantic schemas (<code>StatsParams</code>, <code>PlotParams</code>, <code>SearchParams</code>) and passes custom validators (like the SQL safety check).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="5-api-architecture-lifecycle">5. API Architecture &amp; Lifecycle</h3>
+<p><strong>Files:</strong> <code>api/main.py</code>, <code>api/src/routers/agent.py</code>, <code>api/src/config.py</code></p>
+<p>Built on <strong>FastAPI</strong> for high-performance async processing and Pydantic integration.</p>
+<ul>
+<li><strong>Lifecycle Management (<code>lifespan</code>):</strong> Ensures a deterministic startup sequence. The application provisions storage paths, initializes MLflow telemetry, and verifies DuckDB integrity (automatically triggering ETL if needed) <em>before</em> accepting requests.</li>
+<li><strong>Static Asset Serving (<code>app.mount</code>):</strong> Exposes the <code>/api/v1/plots</code> endpoint to serve generated charts. This allows the Frontend to render agent-created images via standard Markdown links, completely decoupling visualization logic from the UI.</li>
+<li><strong>Strict Configuration:</strong> Utilizes <code>pydantic-settings</code> to strictly validate environment variables (API Keys, Model Params) at boot, enforcing a "Fail-Fast" policy for missing credentials.</li>
+<li><strong>Core Endpoint (<code>POST /report</code>):</strong> Orchestrates the generation of the Executive Report via a structured prompt injection.<ul>
+<li><strong>Workflow:</strong> Enforces the calculation of 4 KPIs, generation of 2 charts, and contextual web search.</li>
+<li><strong>Contextual Steering:</strong> Accepts an optional <code>focus_area</code> parameter (e.g., <em>"Analyze H3N2"</em>), which dynamically adjusts system instructions to guide the agent's focus without code changes.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="./assets/fastapi.gif" /></p>
+<hr />
+<h3 id="6-testing-quality-assurance">6. Testing &amp; Quality Assurance</h3>
+<p>Adhering to <strong>Software Engineering best practices</strong>, a local <code>pytest</code> suite at <code>api/tests</code> was implemented to establish the foundation for future CI/CD integration. The strategy prioritizes <strong>Guardrail Validation</strong>, utilizing deterministic mocks to simulate adversarial attacks (e.g., SQL Injection) and verify if the Agent's security mechanisms effectively block malicious inputs.</p>
+<hr />
+<h3 id="7-observability-governance-mlflow">7. Observability &amp; Governance (MLflow)</h3>
+<p><strong>Files:</strong> <code>middleware/observability.py</code> &amp; <code>services/telemetry.py</code></p>
+<p>To satisfy the "Governance" requirement, every interaction is audited.</p>
+<ul>
+<li><strong>Middleware:</strong> The <code>MLflowTrackingMiddleware</code> intercepts every HTTP request to the API. It automatically starts an MLflow Run, tagging the HTTP method, status code, and latency.</li>
+<li><strong>Traceability:</strong> PydanticAI's internal tracing is hooked into MLflow, logging the entire <strong>Chain of Thought</strong> (Prompt -&gt; Thought -&gt; Tool Call -&gt; Tool Result -&gt; Final Answer):</li>
+</ul>
+<p><img alt="" src="./assets/mlflow_.gif" /></p>
+<ul>
+<li><strong>Artifact Governance:</strong><ul>
+<li>When the <code>/report</code> endpoint is called, the system packages the final Markdown report and the generated PNG images.</li>
+<li>These assets are uploaded to <strong>MinIO</strong> (via MLflow Artifacts) and linked to the unique Run ID.</li>
+<li><strong>Result:</strong> A permanent, auditable record of exactly what report was generated, when, and based on what data.</li>
+</ul>
+</li>
+</ul>
+<p><img alt="" src="./assets/minio.gif" /></p>
+<hr />
+<h3 id="8-user-interface-client-layer">8. User Interface (Client Layer)</h3>
+<p><strong>File:</strong> <code>frontend/app.py</code></p>
+<p>To demonstrate the API's capabilities, a frontend was implemented using <strong>Streamlit</strong>.
+* <strong>Function:</strong> It sends requests to the FastAPI endpoints and renders the returned Markdown response. Crucially, it handles the dynamic resolution of image paths, displaying the locally generated plots served by the API's static file mount alongside the textual analysis, providing a seamless "Report View" experience for the end-user.</p>
+<p><img alt="" src="./assets/streamlit_.gif" /></p>
+<hr />
+<h3 id="9-continuous-documentation">9. Continuous Documentation</h3>
+<p>A "Docs-as-Code" philosophy is followed. The project documentation is built with MkDocs Material, ensuring that architectural decisions and API references are versioned alongside the source code.</p>
+<p><strong>Deployment Strategy:</strong>
+The project implements a hybrid deployment pipeline to ensure flexibility:</p>
+<ul>
+<li><strong>CI/CD (Automated):</strong> A GitHub Actions workflow (<code>ci.yml</code>) automatically builds the documentation using the official Docker image and deploys it to GitHub Pages upon every push to <code>main</code>. This ensures the live documentation is never out of sync with the codebase.</li>
+<li><strong>Local (Manual):</strong> For rapid adjustments, the documentation service runs locally via Docker Compose, exposing a hot-reloading server on port 8000 that mirrors the production build.</li>
+</ul>
+<p><img alt="" src="./assets/mkdocs_deploy_.gif" /></p>
+<blockquote>
+<p>The live documentation is available at: <strong><a href="https://diogosoares3.github.io/healthcare-report-agent/">https://diogosoares3.github.io/healthcare-report-agent/</a></strong></p>
+</blockquote>
+<hr />
+<h2 id="setup-installation">Setup &amp; Installation</h2>
+<p>This project is fully containerized to ensure consistency across environments. The only dependencies required on your host machine are <strong>Docker</strong> and <strong>Docker Compose</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> This setup is optimized for a <strong>Linux environment</strong>. Windows users are recommended to use WSL2.</p>
+</blockquote>
+<h3 id="1-configuration">1. Configuration</h3>
+<p>Start by setting up the environment variables. Copy the example file to <code>.env</code>:</p>
+<pre><code class="language-bash">cp .env.example .env
+</code></pre>
+<p>Open the <code>.env</code> file and populate the variables.
+* <strong>External APIs:</strong> You must provide valid keys for OpenAI (LLM) and Tavily (Search).
+* <strong>Infrastructure:</strong> The default values for Postgres, MinIO, and MLflow are pre-configured for the local Docker network and do not need changes for a local run.</p>
+<pre><code class="language-ini">OPENAI_API_KEY=                 # Required: Your OpenAI Key
+TAVILY_API_KEY=                 # Required: Your Tavily Search Key
+
+POSTGRES_USER=user_srag
+POSTGRES_PASSWORD=password_srag
+POSTGRES_DB=mlflow_db
+
+MINIO_ROOT_USER=minio_admin
+MINIO_ROOT_PASSWORD=minio_password
+MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+MLFLOW_BUCKET_NAME=srag-artifacts
+
+MLFLOW_TRACKING_URI=http://mlflow:5000
+</code></pre>
+<h3 id="2-build-run">2. Build &amp; Run</h3>
+<p>Initialize the application stack. This command will build the images, start the services, and trigger the initial ETL process to download and ingest the SRAG dataset.</p>
+<pre><code class="language-bash">docker compose up --build
+</code></pre>
+<blockquote>
+<p><strong>First Run Notice:</strong> The initial ingestion of the dataset from DATASUS might take a few minutes depending on your internet connection. Watch the logs for <code>Ingestion completed successfully</code>.</p>
+</blockquote>
+<p>To stop the services and remove containers:</p>
+<pre><code class="language-bash">docker compose down
+</code></pre>
+<h3 id="3-service-access-points">3. Service Access Points</h3>
+<p>Once the stack is up and running, you can access the various components via the following local endpoints:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Component</th>
+<th style="text-align: left;">Service</th>
+<th style="text-align: left;">URL</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Frontend</strong></td>
+<td style="text-align: left;">Streamlit</td>
+<td style="text-align: left;"><a href="http://localhost:8501">http://localhost:8501</a></td>
+<td style="text-align: left;"><strong>Main Entrypoint.</strong> The interactive dashboard for users. Click on <strong>Generate Report</strong> button to test all the pipeline.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Backend</strong></td>
+<td style="text-align: left;">FastAPI</td>
+<td style="text-align: left;"><a href="http://localhost:8220/api/v1/docs">http://localhost:8220/api/v1/docs</a></td>
+<td style="text-align: left;">OpenAPI (Swagger) documentation and API testing.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Observability</strong></td>
+<td style="text-align: left;">MLflow UI</td>
+<td style="text-align: left;"><a href="http://localhost:5000">http://localhost:5000</a></td>
+<td style="text-align: left;">Track traces, agent runs, and download generated artifacts.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Storage</strong></td>
+<td style="text-align: left;">MinIO Console</td>
+<td style="text-align: left;"><a href="http://localhost:9001">http://localhost:9001</a></td>
+<td style="text-align: left;">Object storage browser (Login: <code>minio_admin</code> / <code>minio_password</code>).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Documentation</strong></td>
+<td style="text-align: left;">Mkdocs</td>
+<td style="text-align: left;"><a href="http://localhost:8000">http://localhost:8000</a></td>
+<td style="text-align: left;">Mkdocs UI for code documentation.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.instant", "navigation.tabs", "navigation.top", "toc.integrate", "content.code.annotate", "content.tabs.link", "search.highlight", "search.share", "header.autohide", "header.sticky", "navigation.tracking", "mode-toggle"], "search": "assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
