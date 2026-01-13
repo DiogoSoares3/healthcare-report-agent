@@ -1,5 +1,12 @@
 # SRAG Insight Agent: Automated Healthcare Reporting Engine
 ![CI Status](https://github.com/DiogoSoares3/healthcare-report-agent/actions/workflows/ci.yml/badge.svg)
+[![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org/)
+[![PydanticAI](https://img.shields.io/badge/PydanticAI-Agent-e92063.svg?logo=pydantic&logoColor=white)](https://ai.pydantic.dev/)
+[![Code style: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
+[![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **Proof of Concept for Indicium HealthCare Inc.**
 
@@ -80,25 +87,47 @@ The project follows a Monorepo-style structure:
 
 ```text
 .
-├── api                     # Core Backend Application
-│   ├── main.py             # FastAPI entrypoint
-│   └── src
-│       ├── agents          # PydanticAI Agent definitions, Prompts, and Orchestration
-│       ├── db              # Database connections (DuckDB OLAP & MinIO)
-│       ├── middleware      # Observability and Logging middleware
-│       ├── routers         # API Endpoints
-│       ├── services        # Business logic (Ingestion, Telemetry)
-│       └── tools           # Agent Tools (Stats/SQL, Plotting, Web Search)
-├── data                    # Data Layer
-│   ├── plots               # Generated Plots
-│   ├── processed           # SRAG DuckDB database
-│   └── raw                 # Raw CSV inputs
-├── frontend                # Streamlit User Interface
-├── notebooks               # EDA and Prototyping (Auditable research)
-├── Dockerfile              # Containerization for reproducible deployment
-├── docker-compose.yml      # Service orchestration (API, MLflow, Postgres, MinIO)
-├── pyproject.toml          # Project configuration (Dependencies, Ruff settings)
-└── uv.lock                 # Lockfile for deterministic builds
+├── api
+│   ├── main.py                     # FastAPI entrypoint & App Lifecycle
+│   ├── src
+│   │   ├── agents
+│   │   │   ├── deps.py             # Dependency Injection definitions
+│   │   │   ├── orchestrator.py     # Core ReAct Agent logic
+│   │   │   └── prompts.py          # System prompts & Dynamic instructions
+│   │   ├── config.py               # Environment variables & Settings
+│   │   ├── db
+│   │   │   ├── duckdb_connection.py # OLAP Database manager
+│   │   │   └── minio_connection.py  # Object Storage manager
+│   │   ├── middleware
+│   │   │   └── observability.py    # MLflow tracking middleware
+│   │   ├── routers
+│   │   │   └── agent.py            # API Routes (e.g., POST /report)
+│   │   ├── schemas.py              # Shared Pydantic models
+│   │   ├── services
+│   │   │   ├── ingest.py           # ETL Pipeline (CSV -> DuckDB)
+│   │   │   ├── manage_plots.py     # Artifact handling logic
+│   │   │   └── telemetry.py        # Tracing implementation
+│   │   └── tools
+│   │       ├── plot.py             # Graph generation
+│   │       ├── search.py           # Tavily Web Search wrapper
+│   │       └── stats.py            # SQL Generation & Validation
+│   └── tests                       # Pytest Suite
+│       ├── integration             # End-to-end agent tests
+│       └── unit                    # Security & Logic unit tests
+├── assets                          # Architecture diagram & Demo GIFs
+├── data
+│   ├── plots                       # Local storage for generated charts
+│   ├── processed                   # DuckDB database file (.db)
+│   └── raw                         # Raw CSV input
+├── docs                            # MkDocs documentation source
+├── frontend
+│   └── app.py                      # Streamlit User Interface
+├── notebooks                       # Jupyter Notebooks (EDA & Prototyping)
+├── docker-compose.yml              # Service orchestration
+├── Dockerfile                      # Application containerization
+├── mkdocs.yml                      # Documentation configuration
+├── pyproject.toml                  # Dependencies & Tool settings for UV
+└── uv.lock                         # UV dependency lockfile
 ```
 
 ---
@@ -125,7 +154,7 @@ As visualized above, the architecture operates in four distinct stages:
 The transition from a raw dataset to a production-grade Agent was driven by a methodical **Research-to-Production** lifecycle.
 
 Before implementing the API, some experiments were conducted:
-1.  **`notebooks/1.0-eda.ipynb`**: Exploratory Data Analysis to understand the schema, identify missing values, and define the business logic for metrics (Mortality, ICU, Vaccination).
+1.  **`notebooks/1.0-eda.ipynb`**: Exploratory Data Analysis to understand the schema, identify missing values, and define the business logic for metrics (Mortality, ICU, Vaccination, growth cases rate and others).
 2.  **`notebooks/2.0-agent-prototyping.ipynb`**: A "lab environment" where we tested prompt engineering strategies, guardrails and tool definitions against the DuckDB instance to validate response quality before deployment.
 
 ---
@@ -219,7 +248,7 @@ We implement a **Defense-in-Depth** strategy wrapping the Agent:
 ### 5. API Architecture & Lifecycle
 **Files:** `api/main.py`, `api/src/routers/agent.py`, `api/src/config.py`
 
-Built on **FastAPI** for high-performance async processing and seamless Pydantic integration.
+Built on **FastAPI** for high-performance async processing and Pydantic integration.
 
 * **Lifecycle Management (`lifespan`):** Ensures a deterministic startup sequence. The application provisions storage paths, initializes MLflow telemetry, and verifies DuckDB integrity (automatically triggering ETL if needed) *before* accepting requests.
 * **Static Asset Serving (`app.mount`):** Exposes the `/api/v1/plots` endpoint to serve generated charts. This allows the Frontend to render agent-created images via standard Markdown links, completely decoupling visualization logic from the UI.
@@ -339,7 +368,7 @@ Once the stack is up and running, you can access the various components via the 
 
 | Component | Service | URL | Description |
 | :--- | :--- | :--- | :--- |
-| **Frontend** | Streamlit | [http://localhost:8501](http://localhost:8501) | **Main Entrypoint.** The interactive dashboard for users. |
+| **Frontend** | Streamlit | [http://localhost:8501](http://localhost:8501) | **Main Entrypoint.** The interactive dashboard for users. Click on **Generate Report** button to test all the pipeline. |
 | **Backend** | FastAPI | [http://localhost:8220/api/v1/docs](http://localhost:8220/api/v1/docs) | OpenAPI (Swagger) documentation and API testing. |
 | **Observability** | MLflow UI | [http://localhost:5000](http://localhost:5000) | Track traces, agent runs, and download generated artifacts. |
 | **Storage** | MinIO Console | [http://localhost:9001](http://localhost:9001) | Object storage browser (Login: `minio_admin` / `minio_password`). |
