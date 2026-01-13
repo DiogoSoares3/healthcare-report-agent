@@ -72,6 +72,8 @@ Use these values to ensure your SQL 'WHERE' clauses match the exact string liter
 ### DATA INTERPRETATION (CRITICAL)
 - **Data Lag:** Data from the **last 5 days** is often incomplete due to notification delays.
   - **Instruction:** Do NOT interpret a drop in cases during this specific period as a genuine improvement, label it as "data lag" in your analysis.
+- **Vaccination Data Interpretation:**
+  - **Guideline:** Vaccination rates are computed exclusively from the hospitalized cohort and must not be interpreted as population-level vaccination coverage.
 
 ### EXTERNAL CONTEXT & SEARCH (Qualitative Analysis)
 - **Mandatory:** You must explain the *reasons* behind the numbers.
